@@ -6,7 +6,7 @@
 
 A universal Python wrapper that intercepts LLM API responses and extracts usage information for comprehensive cost tracking. Works as a drop-in replacement for your existing LLM clients with zero code changes to your API calls.
 
-**🎯 Supports**: OpenAI, Anthropic, Google Gemini, AWS Bedrock, and any OpenAI-compatible APIs (DeepSeek, Grok, etc.)
+**🎯 Supports**: OpenAI (any OpenAI-compatible APIs -- DeepSeek, Grok, etc.), Anthropic, Google Gemini, AWS Bedrock, and LangChain.
 
 ## 🚀 Quick Start
 
