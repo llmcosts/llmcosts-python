@@ -1,0 +1,93 @@
+[project]
+name = "llmcosts"
+version = "0.1.0"
+description = "A generic, provider-agnostic SDK wrapper that intercepts LLM API responses and extracts usage information for cost tracking with structured payload formatting."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    {name = "Keyton Weissinger", email = "keyton@example.com"}
+]
+maintainers = [
+    {name = "Keyton Weissinger", email = "keyton@example.com"}
+]
+license = "MIT"
+keywords = ["llm", "ai", "cost-tracking", "openai", "anthropic", "gemini", "bedrock", "usage-monitoring"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10", 
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: System :: Monitoring",
+]
+
+dependencies = [
+    "openai>=1.26.0",
+    "anthropic>=0.24.0",
+    "environs>=10.0.0",
+    "google-genai",
+    "requests>=2.31.0",
+    "PyJWT>=2.8.0",
+    "cryptography>=3.4.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "boto3>=1.26.0",  # For Bedrock tests
+    "langchain>=0.1.0",  # For LangChain tests
+    "langchain-openai>=0.1.0",  # For LangChain OpenAI integration
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "boto3>=1.26.0",
+    "langchain>=0.1.0",  # For LangChain tests
+    "langchain-openai>=0.1.0",  # For LangChain OpenAI integration
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/keytonweissinger/llmcosts"
+"Bug Reports" = "https://github.com/keytonweissinger/llmcosts/issues"
+"Source" = "https://github.com/keytonweissinger/llmcosts"
+"Documentation" = "https://github.com/keytonweissinger/llmcosts#readme"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["llmcosts", "llmcosts.*"]
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
