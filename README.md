@@ -86,9 +86,16 @@ Create a `.env` file in your project root:
 # Your LLMCosts API key (required)
 LLMCOSTS_API_KEY=your-llmcosts-api-key-here
 
-# Your LLM provider API keys
+# Your LLM provider API keys (add only the ones you need)
 OPENAI_API_KEY=your-openai-api-key-here
 ANTHROPIC_API_KEY=your-anthropic-api-key-here
+GOOGLE_API_KEY=your-google-api-key-here
+DEEPSEEK_API_KEY=your-deepseek-api-key-here
+XAI_API_KEY=your-xai-api-key-here
+
+# AWS credentials (for Bedrock)
+AWS_ACCESS_KEY_ID=your-aws-access-key-here
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
 ```
 
 > **💡 Recommended Pattern**: Always create `LLMTrackingProxy` directly - it handles global tracker creation, API key management, and background processing automatically. Avoid calling `get_usage_tracker()` unless you need advanced debugging.

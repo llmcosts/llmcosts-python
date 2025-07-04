@@ -20,7 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Migration Guide
 - **Before**: `pip install llmcosts` installed all provider dependencies
-- **After**: `pip install llmcosts[provider]` or `pip install llmcosts[all]` for specific providers
+- **After**: Install only what you need:
+  - `pip install llmcosts[openai]` for OpenAI support
+  - `pip install llmcosts[anthropic]` for Anthropic support
+  - `pip install llmcosts[google]` for Google Gemini support
+  - `pip install llmcosts[bedrock]` for AWS Bedrock support
+  - `pip install llmcosts[langchain]` for LangChain integration
+  - `pip install llmcosts[all]` for all providers (like before)
 - **Impact**: Significantly reduced installation size for users who only need specific providers
 
 ## [0.1.2] - 2024-01-15
