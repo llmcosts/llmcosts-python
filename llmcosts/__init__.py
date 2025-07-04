@@ -1,5 +1,7 @@
 """Public package exports for PyLLMCosts."""
 
+__version__ = "0.1.2"
+
 from .alerts import (
     create_alert,
     delete_alert,
@@ -22,18 +24,13 @@ from .events import (
     list_events,
     update_event,
 )
+from .exceptions import TriggeredLimitError
 from .limits import (
     create_limit,
     delete_limit,
     get_limit,
     list_limits,
     update_limit,
-)
-from .thresholds import (
-    create_threshold,
-    delete_threshold,
-    list_thresholds,
-    update_threshold,
 )
 from .models import (
     calculate_cost_from_tokens,
@@ -64,13 +61,18 @@ from .models import (
 from .models import (
     list_events as list_cost_events,
 )
+from .thresholds import (
+    create_threshold,
+    delete_threshold,
+    list_thresholds,
+    update_threshold,
+)
 from .tracker import (
     LLMTrackingProxy,
     Provider,
     UsageTracker,
     get_usage_tracker,
 )
-from .exceptions import TriggeredLimitError
 
 __all__ = [
     "LLMCostsClient",

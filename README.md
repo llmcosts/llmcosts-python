@@ -26,13 +26,33 @@ uv add llmcosts
 
 ### Basic Usage
 
+> **🔑 CRITICAL: API Key Required**
+>
+> Before using LLMCosts, you **MUST** have an LLMCosts API key. **[Sign up for a free account at llmcosts.com](https://llmcosts.com)** to get your API key.
+>
+> You can provide your API key in two ways:
+> - **Environment variable**: Set `LLMCOSTS_API_KEY` in your environment or `.env` file
+> - **Direct parameter**: Pass `api_key="your-llmcosts-api-key"` to `LLMTrackingProxy`
+>
+> **Without an API key, none of the LLMCosts tracking will work!**
+
 ```python
 from llmcosts import LLMTrackingProxy, Provider
 import openai
 
-# Wrap your existing client - this automatically handles all tracker management
-client = openai.OpenAI(api_key="your-api-key")
+# Method 1: Using environment variable (recommended)
+# Set LLMCOSTS_API_KEY in your environment or .env file
+client = openai.OpenAI(api_key="your-openai-api-key")
 tracked_client = LLMTrackingProxy(client, provider=Provider.OPENAI, debug=True)
+
+# Method 2: Pass API key directly
+client = openai.OpenAI(api_key="your-openai-api-key")
+tracked_client = LLMTrackingProxy(
+    client, 
+    provider=Provider.OPENAI, 
+    api_key="your-llmcosts-api-key",
+    debug=True
+)
 
 # Use exactly as before - zero changes to your API calls
 response = tracked_client.chat.completions.create(
@@ -41,6 +61,19 @@ response = tracked_client.chat.completions.create(
 )
 
 # Usage automatically logged as structured JSON
+```
+
+**Environment Setup (.env file):**
+
+Create a `.env` file in your project root:
+
+```bash
+# Your LLMCosts API key (required)
+LLMCOSTS_API_KEY=your-llmcosts-api-key-here
+
+# Your LLM provider API keys
+OPENAI_API_KEY=your-openai-api-key-here
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
 ```
 
 > **💡 Recommended Pattern**: Always create `LLMTrackingProxy` directly - it handles global tracker creation, API key management, and background processing automatically. Avoid calling `get_usage_tracker()` unless you need advanced debugging.
@@ -85,7 +118,8 @@ from llmcosts import get_usage_tracker, list_alerts, list_limits
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import openai
 
-client = openai.OpenAI(api_key="your-key")
+# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
+client = openai.OpenAI(api_key="your-openai-api-key")
 tracked_client = LLMTrackingProxy(client, provider=Provider.OPENAI)
 
 # Standard chat completion
@@ -111,7 +145,8 @@ for chunk in stream:
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import anthropic
 
-client = anthropic.Anthropic(api_key="your-key")
+# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
+client = anthropic.Anthropic(api_key="your-anthropic-api-key")
 tracked_client = LLMTrackingProxy(client, provider=Provider.ANTHROPIC)
 
 response = tracked_client.messages.create(
@@ -127,7 +162,8 @@ response = tracked_client.messages.create(
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import google.genai as genai
 
-client = genai.Client(api_key="your-key")
+# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
+client = genai.Client(api_key="your-google-api-key")
 tracked_client = LLMTrackingProxy(client, provider=Provider.GOOGLE)
 
 response = tracked_client.models.generate_content(
@@ -143,10 +179,11 @@ from llmcosts.tracker import LLMTrackingProxy, Provider
 import boto3
 import json
 
+# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
 client = boto3.client(
     'bedrock-runtime',
-    aws_access_key_id="your-key",
-    aws_secret_access_key="your-secret",
+    aws_access_key_id="your-aws-access-key",
+    aws_secret_access_key="your-aws-secret-key",
     region_name="us-east-1"
 )
 tracked_client = LLMTrackingProxy(client, provider=Provider.AMAZON_BEDROCK)
@@ -167,16 +204,18 @@ response = tracked_client.invoke_model(
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import openai
 
+# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
+
 # DeepSeek
 deepseek_client = openai.OpenAI(
-    api_key="your-deepseek-key",
+    api_key="your-deepseek-api-key",
     base_url="https://api.deepseek.com/v1"
 )
 tracked_deepseek = LLMTrackingProxy(deepseek_client, provider=Provider.DEEPSEEK)
 
 # Grok/xAI
 grok_client = openai.OpenAI(
-    api_key="your-grok-key", 
+    api_key="your-grok-api-key", 
     base_url="https://api.x.ai/v1"
 )
 tracked_grok = LLMTrackingProxy(grok_client, provider=Provider.XAI)

@@ -1,6 +1,6 @@
 [project]
 name = "llmcosts"
-version = "0.1.0"
+version = "0.1.2"
 description = "A generic, provider-agnostic SDK wrapper that intercepts LLM API responses and extracts usage information for cost tracking with structured payload formatting."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -10,7 +10,7 @@ authors = [
 maintainers = [
     {name = "Keyton Weissinger", email = "keyton@example.com"}
 ]
-license = "MIT"
+license = "Apache-2.0"
 keywords = ["llm", "ai", "cost-tracking", "openai", "anthropic", "gemini", "bedrock", "usage-monitoring"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -72,6 +72,12 @@ include = ["llmcosts", "llmcosts.*"]
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "build>=1.2.2.post1",
+    "twine>=6.1.0",
+]
 
 [tool.black]
 line-length = 88
