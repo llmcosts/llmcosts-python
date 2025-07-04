@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2024-01-15
+
+### Changed
+- **BREAKING**: Restructured dependencies to reduce installation footprint
+- Core dependencies now only include: `requests`, `PyJWT`, `cryptography`, `environs`
+- Provider-specific dependencies moved to optional extras:
+  - `pip install llmcosts[openai]` for OpenAI support
+  - `pip install llmcosts[anthropic]` for Anthropic support
+  - `pip install llmcosts[google]` for Google Gemini support
+  - `pip install llmcosts[bedrock]` for AWS Bedrock support
+  - `pip install llmcosts[langchain]` for LangChain integration
+  - `pip install llmcosts[all]` for all providers
+
+### Migration Guide
+- **Before**: `pip install llmcosts` installed all provider dependencies
+- **After**: `pip install llmcosts[provider]` or `pip install llmcosts[all]` for specific providers
+- **Impact**: Significantly reduced installation size for users who only need specific providers
+
 ## [0.1.2] - 2024-01-15
 
 ### Fixed
@@ -72,6 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apache 2.0 license
 - Built with modern Python packaging (pyproject.toml)
 
+[0.2.0]: https://github.com/keytonweissinger/llmcosts/releases/tag/v0.2.0
 [0.1.2]: https://github.com/keytonweissinger/llmcosts/releases/tag/v0.1.2
 [0.1.1]: https://github.com/keytonweissinger/llmcosts/releases/tag/v0.1.1
 [0.1.0]: https://github.com/keytonweissinger/llmcosts/releases/tag/v0.1.0 

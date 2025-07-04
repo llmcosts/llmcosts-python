@@ -17,11 +17,24 @@ A universal Python wrapper that intercepts LLM API responses and extracts usage 
 ### Installation
 
 ```bash
-# Using pip
+# Core library only (minimal dependencies)
 pip install llmcosts
 
+# With specific providers
+pip install llmcosts[openai]      # OpenAI + compatible APIs (DeepSeek, Grok, etc.)
+pip install llmcosts[anthropic]   # Anthropic Claude
+pip install llmcosts[google]      # Google Gemini
+pip install llmcosts[bedrock]     # AWS Bedrock
+pip install llmcosts[langchain]   # LangChain integration
+
+# All providers at once
+pip install llmcosts[all]
+
 # Using uv (recommended)
-uv add llmcosts
+uv add llmcosts                   # Core only
+uv add llmcosts[openai]           # With OpenAI
+uv add llmcosts[langchain]        # With LangChain
+uv add llmcosts[all]              # All providers
 ```
 
 ### Basic Usage
@@ -37,20 +50,22 @@ uv add llmcosts
 > **Without an API key, none of the LLMCosts tracking will work!**
 
 ```python
+import os
 from llmcosts import LLMTrackingProxy, Provider
 import openai
 
-# Method 1: Using environment variable (recommended)
-# Set LLMCOSTS_API_KEY in your environment or .env file
-client = openai.OpenAI(api_key="your-openai-api-key")
-tracked_client = LLMTrackingProxy(client, provider=Provider.OPENAI, debug=True)
+# Create OpenAI client
+client = openai.OpenAI(
+    # This is the default and can be omitted
+    api_key=os.environ.get("OPENAI_API_KEY"),
+)
 
-# Method 2: Pass API key directly
-client = openai.OpenAI(api_key="your-openai-api-key")
+# Wrap with LLMCosts tracking
 tracked_client = LLMTrackingProxy(
     client, 
-    provider=Provider.OPENAI, 
-    api_key="your-llmcosts-api-key",
+    provider=Provider.OPENAI,
+    # This is the default and can be omitted
+    api_key=os.environ.get("LLMCOSTS_API_KEY"),
     debug=True
 )
 
@@ -100,27 +115,33 @@ from llmcosts import get_usage_tracker, list_alerts, list_limits
 
 ## 🎯 Supported Providers
 
-| Provider | Import | Provider Enum | Models |
-|----------|---------|---------------|---------|
-| **OpenAI** | `import openai` | `Provider.OPENAI` | GPT-4, GPT-3.5, etc. |
-| **Anthropic** | `import anthropic` | `Provider.ANTHROPIC` | Claude-3, Claude-2, etc. |
-| **Google Gemini** | `import google.genai` | `Provider.GOOGLE` | Gemini Pro, etc. |
-| **AWS Bedrock** | `import boto3` | `Provider.AMAZON_BEDROCK` | Claude, Titan, etc. |
-| **DeepSeek** | `import openai` | `Provider.DEEPSEEK` | DeepSeek models |
-| **Grok/xAI** | `import openai` | `Provider.XAI` | Grok models |
-| **LangChain** | `import langchain_openai` | `Provider.OPENAI` | Via OpenAI integration |
+| Provider | Import | Provider Enum | Installation |
+|----------|---------|---------------|-------------|
+| **OpenAI** | `import openai` | `Provider.OPENAI` | `pip install llmcosts[openai]` |
+| **Anthropic** | `import anthropic` | `Provider.ANTHROPIC` | `pip install llmcosts[anthropic]` |
+| **Google Gemini** | `import google.genai` | `Provider.GOOGLE` | `pip install llmcosts[google]` |
+| **AWS Bedrock** | `import boto3` | `Provider.AMAZON_BEDROCK` | `pip install llmcosts[bedrock]` |
+| **DeepSeek** | `import openai` | `Provider.DEEPSEEK` | `pip install llmcosts[openai]` |
+| **Grok/xAI** | `import openai` | `Provider.XAI` | `pip install llmcosts[openai]` |
+| **LangChain** | `import langchain_openai` | `Provider.OPENAI` | `pip install llmcosts[langchain]` |
 
 ## 💻 Usage Examples
 
 ### OpenAI
 
 ```python
+import os
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import openai
 
-# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
-client = openai.OpenAI(api_key="your-openai-api-key")
-tracked_client = LLMTrackingProxy(client, provider=Provider.OPENAI)
+client = openai.OpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+)
+tracked_client = LLMTrackingProxy(
+    client, 
+    provider=Provider.OPENAI,
+    api_key=os.environ.get("LLMCOSTS_API_KEY"),
+)
 
 # Standard chat completion
 response = tracked_client.chat.completions.create(
@@ -142,12 +163,18 @@ for chunk in stream:
 ### Anthropic
 
 ```python
+import os
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import anthropic
 
-# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
-client = anthropic.Anthropic(api_key="your-anthropic-api-key")
-tracked_client = LLMTrackingProxy(client, provider=Provider.ANTHROPIC)
+client = anthropic.Anthropic(
+    api_key=os.environ.get("ANTHROPIC_API_KEY"),
+)
+tracked_client = LLMTrackingProxy(
+    client, 
+    provider=Provider.ANTHROPIC,
+    api_key=os.environ.get("LLMCOSTS_API_KEY"),
+)
 
 response = tracked_client.messages.create(
     model="claude-3-haiku-20240307",
@@ -159,12 +186,18 @@ response = tracked_client.messages.create(
 ### Google Gemini
 
 ```python
+import os
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import google.genai as genai
 
-# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
-client = genai.Client(api_key="your-google-api-key")
-tracked_client = LLMTrackingProxy(client, provider=Provider.GOOGLE)
+client = genai.Client(
+    api_key=os.environ.get("GOOGLE_API_KEY"),
+)
+tracked_client = LLMTrackingProxy(
+    client, 
+    provider=Provider.GOOGLE,
+    api_key=os.environ.get("LLMCOSTS_API_KEY"),
+)
 
 response = tracked_client.models.generate_content(
     model="gemini-pro",
@@ -175,18 +208,22 @@ response = tracked_client.models.generate_content(
 ### AWS Bedrock
 
 ```python
+import os
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import boto3
 import json
 
-# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
 client = boto3.client(
     'bedrock-runtime',
-    aws_access_key_id="your-aws-access-key",
-    aws_secret_access_key="your-aws-secret-key",
+    aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
     region_name="us-east-1"
 )
-tracked_client = LLMTrackingProxy(client, provider=Provider.AMAZON_BEDROCK)
+tracked_client = LLMTrackingProxy(
+    client, 
+    provider=Provider.AMAZON_BEDROCK,
+    api_key=os.environ.get("LLMCOSTS_API_KEY"),
+)
 
 response = tracked_client.invoke_model(
     modelId="anthropic.claude-3-haiku-20240307-v1:0",
@@ -201,24 +238,31 @@ response = tracked_client.invoke_model(
 ### OpenAI-Compatible APIs
 
 ```python
+import os
 from llmcosts.tracker import LLMTrackingProxy, Provider
 import openai
 
-# Remember: Set LLMCOSTS_API_KEY in your environment or pass api_key parameter
-
 # DeepSeek
 deepseek_client = openai.OpenAI(
-    api_key="your-deepseek-api-key",
+    api_key=os.environ.get("DEEPSEEK_API_KEY"),
     base_url="https://api.deepseek.com/v1"
 )
-tracked_deepseek = LLMTrackingProxy(deepseek_client, provider=Provider.DEEPSEEK)
+tracked_deepseek = LLMTrackingProxy(
+    deepseek_client, 
+    provider=Provider.DEEPSEEK,
+    api_key=os.environ.get("LLMCOSTS_API_KEY"),
+)
 
 # Grok/xAI
 grok_client = openai.OpenAI(
-    api_key="your-grok-api-key", 
+    api_key=os.environ.get("XAI_API_KEY"), 
     base_url="https://api.x.ai/v1"
 )
-tracked_grok = LLMTrackingProxy(grok_client, provider=Provider.XAI)
+tracked_grok = LLMTrackingProxy(
+    grok_client, 
+    provider=Provider.XAI,
+    api_key=os.environ.get("LLMCOSTS_API_KEY"),
+)
 ```
 
 ### LangChain Integration
