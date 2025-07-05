@@ -52,7 +52,7 @@ Edit `CHANGELOG.md`:
 
 2. **Add version link** at the bottom:
    ```markdown
-   [X.Y.Z]: https://github.com/keytonweissinger/llmcosts/releases/tag/vX.Y.Z
+   [X.Y.Z]: https://github.com/llmcosts/llmcosts-python/releases/tag/vX.Y.Z
    ```
 
 ### **Step 3: Clean Build Environment**
@@ -142,7 +142,7 @@ git push origin main --tags
 
 ### **Step 9: GitHub Release (Optional)**
 
-1. Go to https://github.com/keytonweissinger/llmcosts/releases
+1. Go to https://github.com/llmcosts/llmcosts-python/releases
 2. Click "Create a new release"
 3. Choose the tag `vX.Y.Z`
 4. Use changelog content as release notes

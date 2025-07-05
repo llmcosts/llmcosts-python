@@ -1,14 +1,14 @@
 [project]
 name = "llmcosts"
-version = "0.2.0"
+version = "0.2.1"
 description = "A generic, provider-agnostic SDK wrapper that intercepts LLM API responses and extracts usage information for cost tracking with structured payload formatting."
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    {name = "Keyton Weissinger", email = "keyton@example.com"}
+    {name = "Keyton Weissinger", email = "keyton@llmcosts.com"}
 ]
 maintainers = [
-    {name = "Keyton Weissinger", email = "keyton@example.com"}
+    {name = "Keyton Weissinger", email = "keyton@llmcosts.com"}
 ]
 license = "Apache-2.0"
 keywords = ["llm", "ai", "cost-tracking", "openai", "anthropic", "gemini", "bedrock", "usage-monitoring"]
@@ -81,10 +81,10 @@ dev = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/keytonweissinger/llmcosts"
-"Bug Reports" = "https://github.com/keytonweissinger/llmcosts/issues"
-"Source" = "https://github.com/keytonweissinger/llmcosts"
-"Documentation" = "https://github.com/keytonweissinger/llmcosts#readme"
+"Homepage" = "https://github.com/llmcosts/llmcosts-python"
+"Bug Reports" = "https://github.com/llmcosts/llmcosts-python/issues"
+"Source" = "https://github.com/llmcosts/llmcosts-python"
+"Documentation" = "https://github.com/llmcosts/llmcosts-python#readme"
 
 [tool.setuptools.packages.find]
 where = ["."]

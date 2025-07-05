@@ -1042,19 +1042,30 @@ wheels = [
 
 [[package]]
 name = "llmcosts"
-version = "0.1.2"
+version = "0.2.1"
 source = { editable = "." }
 dependencies = [
-    { name = "anthropic" },
     { name = "cryptography" },
     { name = "environs" },
-    { name = "google-genai" },
-    { name = "openai" },
     { name = "pyjwt" },
     { name = "requests" },
 ]
 
 [package.optional-dependencies]
+all = [
+    { name = "anthropic" },
+    { name = "boto3" },
+    { name = "google-genai" },
+    { name = "langchain" },
+    { name = "langchain-openai" },
+    { name = "openai" },
+]
+anthropic = [
+    { name = "anthropic" },
+]
+bedrock = [
+    { name = "boto3" },
+]
 dev = [
     { name = "black" },
     { name = "boto3" },
@@ -1065,6 +1076,16 @@ dev = [
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-cov" },
+]
+google = [
+    { name = "google-genai" },
+]
+langchain = [
+    { name = "langchain" },
+    { name = "langchain-openai" },
+]
+openai = [
+    { name = "openai" },
 ]
 test = [
     { name = "boto3" },
@@ -1082,20 +1103,29 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "anthropic", specifier = ">=0.24.0" },
+    { name = "anthropic", marker = "extra == 'all'", specifier = ">=0.24.0" },
+    { name = "anthropic", marker = "extra == 'anthropic'", specifier = ">=0.24.0" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=23.0.0" },
+    { name = "boto3", marker = "extra == 'all'", specifier = ">=1.26.0" },
+    { name = "boto3", marker = "extra == 'bedrock'", specifier = ">=1.26.0" },
     { name = "boto3", marker = "extra == 'dev'", specifier = ">=1.26.0" },
     { name = "boto3", marker = "extra == 'test'", specifier = ">=1.26.0" },
     { name = "cryptography", specifier = ">=3.4.0" },
     { name = "environs", specifier = ">=10.0.0" },
-    { name = "google-genai" },
+    { name = "google-genai", marker = "extra == 'all'" },
+    { name = "google-genai", marker = "extra == 'google'" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=5.12.0" },
+    { name = "langchain", marker = "extra == 'all'", specifier = ">=0.1.0" },
     { name = "langchain", marker = "extra == 'dev'", specifier = ">=0.1.0" },
+    { name = "langchain", marker = "extra == 'langchain'", specifier = ">=0.1.0" },
     { name = "langchain", marker = "extra == 'test'", specifier = ">=0.1.0" },
+    { name = "langchain-openai", marker = "extra == 'all'", specifier = ">=0.1.0" },
     { name = "langchain-openai", marker = "extra == 'dev'", specifier = ">=0.1.0" },
+    { name = "langchain-openai", marker = "extra == 'langchain'", specifier = ">=0.1.0" },
     { name = "langchain-openai", marker = "extra == 'test'", specifier = ">=0.1.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0.0" },
-    { name = "openai", specifier = ">=1.26.0" },
+    { name = "openai", marker = "extra == 'all'", specifier = ">=1.26.0" },
+    { name = "openai", marker = "extra == 'openai'", specifier = ">=1.26.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.0.0" },
     { name = "pyjwt", specifier = ">=2.8.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0.0" },
@@ -1104,7 +1134,7 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=4.0.0" },
     { name = "requests", specifier = ">=2.31.0" },
 ]
-provides-extras = ["test", "dev"]
+provides-extras = ["openai", "anthropic", "google", "bedrock", "langchain", "all", "test", "dev"]
 
 [package.metadata.requires-dev]
 dev = [

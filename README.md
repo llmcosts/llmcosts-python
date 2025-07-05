@@ -20,17 +20,17 @@ A universal Python wrapper that intercepts LLM API responses and extracts usage 
 # Core library only (minimal dependencies)
 pip install llmcosts
 
-# With specific providers
-pip install llmcosts[openai]      # OpenAI + compatible APIs (DeepSeek, Grok, etc.)
-pip install llmcosts[anthropic]   # Anthropic Claude
-pip install llmcosts[google]      # Google Gemini
-pip install llmcosts[bedrock]     # AWS Bedrock
-pip install llmcosts[langchain]   # LangChain integration
+# With specific providers (quote for zsh compatibility)
+pip install "llmcosts[openai]"      # OpenAI + compatible APIs (DeepSeek, Grok, etc.)
+pip install "llmcosts[anthropic]"   # Anthropic Claude
+pip install "llmcosts[google]"      # Google Gemini
+pip install "llmcosts[bedrock]"     # AWS Bedrock
+pip install "llmcosts[langchain]"   # LangChain integration
 
 # All providers at once
-pip install llmcosts[all]
+pip install "llmcosts[all]"
 
-# Using uv (recommended)
+# Using uv (recommended) - no quotes needed
 uv add llmcosts                   # Core only
 uv add llmcosts[openai]           # With OpenAI
 uv add llmcosts[langchain]        # With LangChain
@@ -124,13 +124,13 @@ from llmcosts import get_usage_tracker, list_alerts, list_limits
 
 | Provider | Import | Provider Enum | Installation |
 |----------|---------|---------------|-------------|
-| **OpenAI** | `import openai` | `Provider.OPENAI` | `pip install llmcosts[openai]` |
-| **Anthropic** | `import anthropic` | `Provider.ANTHROPIC` | `pip install llmcosts[anthropic]` |
-| **Google Gemini** | `import google.genai` | `Provider.GOOGLE` | `pip install llmcosts[google]` |
-| **AWS Bedrock** | `import boto3` | `Provider.AMAZON_BEDROCK` | `pip install llmcosts[bedrock]` |
-| **DeepSeek** | `import openai` | `Provider.DEEPSEEK` | `pip install llmcosts[openai]` |
-| **Grok/xAI** | `import openai` | `Provider.XAI` | `pip install llmcosts[openai]` |
-| **LangChain** | `import langchain_openai` | `Provider.OPENAI` | `pip install llmcosts[langchain]` |
+| **OpenAI** | `import openai` | `Provider.OPENAI` | `pip install "llmcosts[openai]"` |
+| **Anthropic** | `import anthropic` | `Provider.ANTHROPIC` | `pip install "llmcosts[anthropic]"` |
+| **Google Gemini** | `import google.genai` | `Provider.GOOGLE` | `pip install "llmcosts[google]"` |
+| **AWS Bedrock** | `import boto3` | `Provider.AMAZON_BEDROCK` | `pip install "llmcosts[bedrock]"` |
+| **DeepSeek** | `import openai` | `Provider.DEEPSEEK` | `pip install "llmcosts[openai]"` |
+| **Grok/xAI** | `import openai` | `Provider.XAI` | `pip install "llmcosts[openai]"` |
+| **LangChain** | `import langchain_openai` | `Provider.OPENAI` | `pip install "llmcosts[langchain]"` |
 
 ## 💻 Usage Examples
 
@@ -1556,8 +1556,8 @@ For comprehensive testing documentation, including callback testing, provider-sp
 
 ```bash
 # Clone repository
-git clone https://github.com/keytonweissinger/llmcosts.git
-cd llmcosts
+git clone https://github.com/llmcosts/llmcosts-python.git
+cd llmcosts-python
 
 # Using uv (recommended)
 uv sync --extra dev
@@ -1631,8 +1631,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - **PyPI**: [https://pypi.org/project/llmcosts/](https://pypi.org/project/llmcosts/)
-- **GitHub**: [https://github.com/keytonweissinger/llmcosts](https://github.com/keytonweissinger/llmcosts)
-- **Issues**: [https://github.com/keytonweissinger/llmcosts/issues](https://github.com/keytonweissinger/llmcosts/issues)
+- **GitHub**: [https://github.com/llmcosts/llmcosts-python](https://github.com/llmcosts/llmcosts-python)
+- **Issues**: [https://github.com/llmcosts/llmcosts-python/issues](https://github.com/llmcosts/llmcosts-python/issues)
 - **Documentation**: This README
 
 ## 📈 Changelog
