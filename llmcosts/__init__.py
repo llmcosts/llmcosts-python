@@ -70,6 +70,7 @@ from .thresholds import (
 from .tracker import (
     LLMTrackingProxy,
     Provider,
+    Framework,
     UsageTracker,
     get_usage_tracker,
 )
@@ -78,6 +79,7 @@ __all__ = [
     "LLMCostsClient",
     "LLMTrackingProxy",
     "Provider",
+    "Framework",
     "UsageTracker",
     "get_usage_tracker",
     "TriggeredLimitError",

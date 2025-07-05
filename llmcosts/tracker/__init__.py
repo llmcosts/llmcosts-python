@@ -1,4 +1,5 @@
 from .providers import Provider
+from .frameworks import Framework
 from .proxy import LLMTrackingProxy
 from .usage_delivery import (
     UsageTracker,
@@ -23,6 +24,7 @@ except Exception:
 __all__ = [
     "LLMTrackingProxy",
     "Provider",
+    "Framework",
     "UsageTracker",
     "get_usage_tracker",
     "reset_global_tracker",
