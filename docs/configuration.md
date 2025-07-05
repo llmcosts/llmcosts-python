@@ -26,8 +26,8 @@ This guide covers all configuration options, environment variables, and advanced
 Configure the global tracker with environment variables:
 
 ```bash
-# Required: Your LLMCosts API key
-export LLMCOSTS_API_KEY="your-api-key"
+# Required: Your LLMCosts API key (get from llmcosts.com)
+export LLMCOSTS_API_KEY="your-llmcosts-api-key"
 
 # Optional: Custom API endpoint (only used when creating new trackers)
 export LLMCOSTS_API_ENDPOINT="https://your-endpoint.com/api/v1/usage"
@@ -36,6 +36,8 @@ export LLMCOSTS_API_ENDPOINT="https://your-endpoint.com/api/v1/usage"
 export SQLITE_CALLBACK_TARGET_PATH="./data"    # SQLite database location
 export TEXT_CALLBACK_TARGET_PATH="./logs"      # Text file location
 ```
+
+**🔒 Your Provider Keys Stay Private**: LLMCosts only needs its own API key. Your existing LLM provider API keys (OpenAI, Anthropic, etc.) remain yours and are used exactly as before - LLMCosts never sees them.
 
 When environment variables are set, you can omit the `api_key` parameter:
 

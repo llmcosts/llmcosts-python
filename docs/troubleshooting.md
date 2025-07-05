@@ -16,19 +16,21 @@ ValueError: LLMCOSTS_API_KEY is required
 ```
 
 **Solution:**
-Set the `LLMCOSTS_API_KEY` environment variable or pass `api_key` parameter:
+Set the `LLMCOSTS_API_KEY` environment variable or pass `api_key` parameter. **This is your LLMCosts API key from llmcosts.com, NOT your provider API keys:**
 
 ```python
 # Method 1: Environment variable
-export LLMCOSTS_API_KEY="your-api-key"
+export LLMCOSTS_API_KEY="your-llmcosts-api-key-from-llmcosts.com"
 
 # Method 2: Direct parameter
 tracked_client = LLMTrackingProxy(
     client, 
     provider=Provider.OPENAI,
-    api_key="your-llmcosts-api-key"
+    api_key="your-llmcosts-api-key-from-llmcosts.com"
 )
 ```
+
+**🔒 Important**: This is different from your OpenAI, Anthropic, etc. API keys, which remain yours and are never shared with LLMCosts.
 
 ### 2. OpenAI Streaming Without Usage
 

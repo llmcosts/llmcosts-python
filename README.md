@@ -77,23 +77,14 @@ response = tracked_client.chat.completions.create(
 
 ### Environment Setup
 
-Create a `.env` file in your project root:
+LLMCosts only needs its own API key to function. You can pass it in as a parameter or LLMTrackingProxy can get it from an environment variable.
 
 ```bash
-# Your LLMCosts API key (required)
-LLMCOSTS_API_KEY=your-llmcosts-api-key-here
-
-# Your LLM provider API keys (add only the ones you need)
-OPENAI_API_KEY=your-openai-api-key-here
-ANTHROPIC_API_KEY=your-anthropic-api-key-here
-GOOGLE_API_KEY=your-google-api-key-here
-DEEPSEEK_API_KEY=your-deepseek-api-key-here
-XAI_API_KEY=your-xai-api-key-here
-
-# AWS credentials (for Bedrock)
-AWS_ACCESS_KEY_ID=your-aws-access-key-here
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
+# Set your LLMCosts API key (get this from llmcosts.com)
+export LLMCOSTS_API_KEY="your-llmcosts-api-key-here"
 ```
+
+**🔒 Important**: Your existing LLM provider API keys (OpenAI, Anthropic, etc.) remain yours and are never shared with LLMCosts. You continue to use them exactly as before - LLMCosts only extracts usage metadata from responses.
 
 > **💡 Recommended Pattern**: Always create `LLMTrackingProxy` directly - it handles global tracker creation, API key management, and background processing automatically.
 
@@ -268,7 +259,7 @@ pip install -e ".[dev]"
 ### Testing
 
 ```bash
-# Quick test
+# Quick test (requires your own OpenAI API key)
 uv run python tests/check.py openai gpt-4o-mini
 
 # Full test suite
@@ -278,7 +269,9 @@ uv run pytest
 uv run pytest --cov=llmcosts --cov-report=html
 ```
 
-> **See [Testing Guide](docs/testing.md) for comprehensive testing documentation.**
+**🔒 Testing Privacy**: Tests use YOUR provider API keys locally to verify functionality. These keys never leave your machine - they're only used for local testing.
+
+> **See [Testing Guide](docs/testing.md) for comprehensive testing documentation including how to set up provider API keys for local testing.**
 
 ## 🤝 Contributing
 

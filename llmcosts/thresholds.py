@@ -66,3 +66,29 @@ def delete_threshold(client: LLMCostsClient, threshold_id: str) -> Any:
         client._handle_triggered_thresholds_in_response(response)
 
     return response
+
+
+def list_threshold_events(
+    client: LLMCostsClient,
+    type: Optional[str] = None,
+    client_customer_key: Optional[str] = None,
+    model_id: Optional[str] = None,
+    provider: Optional[str] = None,
+) -> Any:
+    """Return active threshold events for the authenticated API key."""
+    params = {}
+    if type is not None:
+        params["type"] = type
+    if client_customer_key is not None:
+        params["client_customer_key"] = client_customer_key
+    if model_id is not None:
+        params["model_id"] = model_id
+    if provider is not None:
+        params["provider"] = provider
+    response = client.get("/threshold-events", params=params)
+
+    # Handle triggered thresholds from response
+    if response:
+        client._handle_triggered_thresholds_in_response(response)
+
+    return response

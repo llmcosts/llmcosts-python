@@ -206,13 +206,18 @@ response = tracked_grok.chat.completions.create(
 
 ## Environment Setup
 
-Create a `.env` file in your project root:
+LLMCosts only needs its own API key:
 
 ```bash
-# Your LLMCosts API key (required)
+# Your LLMCosts API key (required) - get this from llmcosts.com
 LLMCOSTS_API_KEY=your-llmcosts-api-key-here
+```
 
-# Your LLM provider API keys (add only the ones you need)
+**🔒 Your Provider API Keys Stay Private**: Continue using your existing LLM provider API keys exactly as before. LLMCosts never sees them - we only extract usage metadata from responses.
+
+**Example provider key setup** (these stay yours):
+```bash
+# Examples - these remain private and are never shared with LLMCosts
 OPENAI_API_KEY=your-openai-api-key-here
 ANTHROPIC_API_KEY=your-anthropic-api-key-here
 GOOGLE_API_KEY=your-google-api-key-here

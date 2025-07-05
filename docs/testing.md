@@ -134,24 +134,32 @@ uv run pytest tests/test_*_limit.py -v
 
 ### Test Configuration
 
+**🔒 Privacy Note**: These API keys are for YOUR LOCAL TESTING ONLY. LLMCosts never sees or requires your provider API keys - they stay on your machine for testing purposes.
+
 Tests use configuration from `tests/.env`:
 
 ```bash
-# LLMCosts API key (required)
+# Your LLMCosts API key (required for all tests)
 LLMCOSTS_API_KEY=your-llmcosts-api-key
 
-# Provider API keys (only needed for specific tests)
+# YOUR provider API keys (for local testing only - never shared with LLMCosts)
 OPENAI_API_KEY=your-openai-key
 ANTHROPIC_API_KEY=your-anthropic-key
 GOOGLE_API_KEY=your-google-key
 DEEPSEEK_API_KEY=your-deepseek-key
 XAI_API_KEY=your-xai-key
 
-# AWS credentials (for Bedrock tests)
+# AWS credentials (for Bedrock tests - stays local)
 AWS_ACCESS_KEY_ID=your-aws-access-key
 AWS_SECRET_ACCESS_KEY=your-aws-secret-key
 AWS_DEFAULT_REGION=us-east-1
 ```
+
+**Why do tests need provider API keys?**
+- Tests make real API calls to verify LLMCosts works correctly with each provider
+- These keys remain on YOUR machine - they're never transmitted to LLMCosts
+- LLMCosts only extracts usage metadata from the responses
+- Skip tests for providers you don't have keys for
 
 ## 📊 Callback Testing
 
