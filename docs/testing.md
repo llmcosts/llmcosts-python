@@ -413,6 +413,7 @@ uv run pytest --html=test-report.html --self-contained-html
 
 ## 🔗 Related Documentation
 
+- **[Client Tracking & Context Data](client-tracking.md)** - Track costs per client with rich context data
 - **[Troubleshooting](troubleshooting.md)** - Common issues and solutions
 - **[Configuration](configuration.md)** - Advanced configuration options
 - **[Providers](providers.md)** - Provider-specific integration guides 

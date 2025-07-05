@@ -353,6 +353,7 @@ response = chat_model.invoke([HumanMessage(content="Hello")])
 
 ## Next Steps
 
+- **[Client Tracking & Context Data](client-tracking.md)** - Track costs per client with rich context data
 - **[Configuration](configuration.md)** - Advanced configuration options
 - **[Pricing](pricing.md)** - Model discovery and cost calculation
 - **[Troubleshooting](troubleshooting.md)** - Common issues and solutions 

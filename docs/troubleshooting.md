@@ -350,6 +350,7 @@ If you're still experiencing issues:
 
 ## 🔗 Related Documentation
 
+- **[Client Tracking & Context Data](client-tracking.md)** - Track costs per client with rich context data
 - **[Configuration](configuration.md)** - Advanced configuration options
 - **[Providers](providers.md)** - Provider-specific integration guides
 - **[Testing](testing.md)** - Comprehensive testing documentation 

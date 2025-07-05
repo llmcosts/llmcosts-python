@@ -1,6 +1,6 @@
 # LLMCosts
 
-[![PyPI version](https://badge.fury.io/py/llmcosts.svg)](https://badge.fury.io/py/llmcosts)
+[![PyPI version](https://img.shields.io/pypi/v/llmcosts.svg)](https://pypi.org/project/llmcosts/)
 [![Python Support](https://img.shields.io/pypi/pyversions/llmcosts.svg)](https://pypi.org/project/llmcosts/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -101,10 +101,12 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
 
 - **🔄 Universal Compatibility**: One proxy works with ANY LLM provider's SDK - OpenAI, Anthropic, Google, AWS, and more
 - **🔒 Privacy-First Design**: NEVER sees API keys, requests, or responses - only usage data (tokens, costs, model info)
+- **🏢 Client-Level Tracking**: Seamlessly track costs per customer, user, project, or department with rich context data
 - **📊 Automatic Usage Tracking**: Captures tokens, costs, model info, and timestamps from response metadata
+- **🏷️ Rich Context Data**: Add any metadata - project names, user IDs, billing info, session data, or custom tags
+- **💰 Multi-Tenant Ready**: Perfect for agencies, SaaS platforms, and enterprise cost allocation
 - **🎛️ Dynamic Configuration**: Change settings on-the-fly without restarting
 - **💾 Smart Delivery**: Resilient background delivery with retry logic
-- **📝 Custom Context**: Add user/session tracking data to every request
 - **🔔 Response Callbacks**: Built-in SQLite/text file callbacks plus custom handlers
 - **🔍 Debug Mode**: Synchronous operation for testing and debugging
 - **📤 Structured Output**: Clean JSON format for easy parsing
@@ -127,6 +129,7 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
 
 ### Core Guides
 
+- **[🏢 Client Tracking & Context Data](docs/client-tracking.md)** - **⭐ ESSENTIAL** - Track costs per client, user, project with rich context data
 - **[🔧 Configuration](docs/configuration.md)** - All configuration options, environment variables, and advanced settings
 - **[🎯 Providers](docs/providers.md)** - Provider-specific integration guides with examples
 - **[🔗 LangChain Integration](docs/langchain.md)** - Complete LangChain integration guide
@@ -137,6 +140,7 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
 ### Quick Links
 
 - **Getting Started**: See [Basic Usage](#basic-usage) above
+- **🏢 Multi-Tenant Apps**: [Client Tracking Guide](docs/client-tracking.md) - Perfect for agencies & SaaS
 - **Provider Setup**: [Providers Guide](docs/providers.md)
 - **LangChain Users**: [LangChain Integration](docs/langchain.md)
 - **Advanced Config**: [Configuration Guide](docs/configuration.md)
@@ -192,6 +196,32 @@ tracked_client = LLMTrackingProxy(
 
 chat_model = ChatOpenAI(client=tracked_client.chat.completions)
 response = chat_model.invoke([{"role": "user", "content": "Hello!"}])
+```
+
+### Client Tracking (Multi-Tenant)
+
+```python
+from llmcosts import LLMTrackingProxy, Provider
+import openai
+
+client = openai.OpenAI(api_key="your-key")
+tracked_client = LLMTrackingProxy(
+    client,
+    provider=Provider.OPENAI,
+    client_customer_key="customer_acme_corp",  # Track costs per customer
+    context={
+        "user_id": "user_123",
+        "project": "chatbot_v2", 
+        "department": "support",
+        "environment": "production"
+    }
+)
+
+response = tracked_client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+# → Automatically tracked with customer and context data for billing/analytics
 ```
 
 > **See [Provider Integration Guide](docs/providers.md) for complete examples of all supported providers.**

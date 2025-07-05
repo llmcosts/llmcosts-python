@@ -114,94 +114,23 @@ tracked_client.context = {"user_id": "user_789", "session_id": "session_999"}
 
 ## 🏢 Customer Key Tracking
 
-For multi-tenant applications, you can track usage per customer using the `client_customer_key` parameter. This is especially useful for billing, quota management, and usage analytics per customer.
+For multi-tenant applications, you can track usage per customer using the `client_customer_key` parameter:
 
 ```python
-# Method 1: Set customer key at initialization
 tracked_client = LLMTrackingProxy(
     client,
     provider=Provider.OPENAI,
-    client_customer_key="customer_123"
+    client_customer_key="customer_acme_corp"  # Track costs per customer
 )
 
-# All API calls will include the customer key
+# All API calls automatically include this customer key for billing/analytics
 response = tracked_client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[{"role": "user", "content": "Hello"}]
 )
-# → Sends to server: {"client_customer_key": "customer_123", "model_id": "gpt-4o-mini", ...}
-
-# Method 2: Update customer key dynamically  
-tracked_client.client_customer_key = "customer_456"
-response = tracked_client.chat.completions.create(
-    model="gpt-4o-mini", 
-    messages=[{"role": "user", "content": "Another request"}]
-)
-# → Sends to server: {"client_customer_key": "customer_456", "model_id": "gpt-4o-mini", ...}
-
-# Method 3: Combine with context data (context is for other tracking metadata)
-tracked_client = LLMTrackingProxy(
-    client,
-    provider=Provider.OPENAI,
-    client_customer_key="customer_789",
-    context={
-        "user_id": "user_123", 
-        "session_id": "session_456",
-        "feature": "chat_completion"
-    }
-)
 ```
 
-### Multi-Customer Service Example
-
-```python
-import time
-from llmcosts.tracker import LLMTrackingProxy, Provider
-import openai
-
-class MultiTenantLLMService:
-    def __init__(self, api_key):
-        self.base_client = openai.OpenAI(api_key=api_key)
-        self.tracked_client = LLMTrackingProxy(
-            self.base_client,
-            provider=Provider.OPENAI
-        )
-    
-    def chat_for_customer(self, customer_id, user_id, message):
-        # Set customer key for billing/analytics (separate from context)
-        self.tracked_client.client_customer_key = customer_id
-        
-        # Context is for other metadata
-        self.tracked_client.context = {
-            "user_id": user_id,
-            "timestamp": time.time()
-        }
-        
-        return self.tracked_client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": message}]
-        )
-
-# Usage tracking with customer separation
-service = MultiTenantLLMService("your-api-key")
-
-# First customer call
-response1 = service.chat_for_customer("acme_corp", "user123", "Hello!")
-# → Sends: {"client_customer_key": "acme_corp", "context": {"user_id": "user123", ...}, ...}
-
-# Second customer call  
-response2 = service.chat_for_customer("globex_inc", "user456", "Hi there!")
-# → Sends: {"client_customer_key": "globex_inc", "context": {"user_id": "user456", ...}, ...}
-```
-
-### Customer Key Features
-
-- **Separate from Context**: Customer key is a top-level field, not part of context metadata
-- **Flexible Values**: Customer key can be any string, null, or empty
-- **Automatic Inclusion**: Added to all usage records when set on the proxy
-- **Dynamic Updates**: Change customer key mid-session with the setter property
-- **Query Support**: Retrieve usage data filtered by customer key via the LLMCosts API
-- **Billing Integration**: Perfect for customer-specific billing and quota tracking
+> **💡 For comprehensive client tracking examples, multi-tenant patterns, and rich context data, see [Client Tracking & Context Data Guide](client-tracking.md)**
 
 ## 📤 Response Callbacks
 

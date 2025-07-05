@@ -226,6 +226,7 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
 
 ## Next Steps
 
+- **[Client Tracking & Context Data](client-tracking.md)** - Track costs per client with rich context data
 - **[LangChain Integration](langchain.md)** - Detailed LangChain integration guide
 - **[Configuration](configuration.md)** - Advanced configuration options
 - **[Pricing](pricing.md)** - Model discovery and cost calculation
