@@ -11,8 +11,8 @@ from typing import Any, Callable, Dict, Optional
 
 from ..client import LLMCostsClient
 from ..exceptions import TriggeredLimitError
-from .providers import Provider
 from .frameworks import Framework
+from .providers import Provider
 from .registry import get_usage_handler
 from .usage_delivery import UsageTracker, get_usage_tracker, set_global_usage_tracker
 
@@ -23,18 +23,36 @@ class LLMTrackingProxy:
     Internally uses :class:`LLMCostsClient` for all HTTP communication so that
     connectivity settings remain consistent across the SDK.
 
-    Example:
+    The ``provider`` parameter specifies the actual LLM service (e.g., OpenAI, Anthropic)
+    and is required for all usage. The ``framework`` parameter is optional and only needed
+    for special integrations like LangChain. Most users should omit ``framework`` (defaults to None).
+
+    Examples:
         import openai
         import anthropic
-        from tracker import LLMTrackingProxy, Provider
+        from tracker import LLMTrackingProxy, Provider, Framework
 
-        # OpenAI
-        openai_client = LLMTrackingProxy(openai.OpenAI(), provider=Provider.OPENAI)
+        # Standard usage - framework=None by default
+        openai_client = LLMTrackingProxy(
+            openai.OpenAI(),
+            provider=Provider.OPENAI  # Required: specifies the LLM service
+        )
 
-        # Anthropic
-        anthropic_client = LLMTrackingProxy(anthropic.Anthropic(), provider=Provider.ANTHROPIC)
+        anthropic_client = LLMTrackingProxy(
+            anthropic.Anthropic(),
+            provider=Provider.ANTHROPIC  # Required: specifies the LLM service
+        )
 
-        # Usage tracking works automatically for both
+        # LangChain integration - framework parameter required
+        from langchain_openai import ChatOpenAI
+        tracked_client = LLMTrackingProxy(
+            openai.OpenAI(),
+            provider=Provider.OPENAI,        # Required: the underlying LLM provider
+            framework=Framework.LANGCHAIN    # Required: enables LangChain features
+        )
+        chat_model = ChatOpenAI(client=tracked_client.chat.completions)
+
+        # Usage tracking works automatically for all cases
         openai_response = openai_client.chat.completions.create(...)
         anthropic_response = anthropic_client.messages.create(...)
     """
@@ -50,14 +68,18 @@ class LLMTrackingProxy:
         context: Optional[Dict[str, Any]] = None,
         response_callback: Optional[Callable[[Any], None]] = None,
         api_key: Optional[str] = None,
-            client_customer_key: Optional[str] = None,
-        ):
+        client_customer_key: Optional[str] = None,
+    ):
         """Initialize the tracking proxy.
 
         Args:
             target: The LLM client to wrap (OpenAI, Anthropic, etc.)
-            provider: The Provider enum value specifying which provider this is
-            framework: Optional framework integration (e.g. ``Framework.LANGCHAIN``)
+            provider: The Provider enum value specifying which LLM service this is.
+                     Required for all usage (e.g., Provider.OPENAI, Provider.ANTHROPIC).
+            framework: Optional framework integration (e.g., ``Framework.LANGCHAIN``).
+                      Usually ``None`` (default) for direct API usage. Only needed for
+                      special integrations like LangChain that require framework-specific
+                      features (e.g., automatic stream options injection).
             debug: If True, enable debug logging. Otherwise logs errors only.
             sync_mode: If True, wait for the usage tracker to return (good for debugging/testing).
             remote_save: If True, tell the remote server to save cost events.

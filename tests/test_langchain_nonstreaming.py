@@ -15,8 +15,8 @@ from environs import Env
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from llmcosts.tracker import LLMTrackingProxy
-from llmcosts.tracker.providers import Provider
 from llmcosts.tracker.frameworks import Framework
+from llmcosts.tracker.providers import Provider
 
 # Load environment variables from .env file in the tests directory
 env = Env()
@@ -70,8 +70,8 @@ class TestLangChainNonStreaming:
         langchain_llm.client = LLMTrackingProxy(
             langchain_llm.client,
             provider=Provider.OPENAI,
-            debug=True,
             framework=Framework.LANGCHAIN,
+            debug=True,
         )
 
         return langchain_llm
@@ -97,8 +97,8 @@ class TestLangChainNonStreaming:
         langchain_chat_model.client = LLMTrackingProxy(
             langchain_chat_model.client,
             provider=Provider.OPENAI,
-            debug=True,
             framework=Framework.LANGCHAIN,
+            debug=True,
         )
 
         return langchain_chat_model

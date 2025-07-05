@@ -37,6 +37,39 @@ uv add llmcosts[langchain]        # With LangChain
 uv add llmcosts[all]              # All providers
 ```
 
+### Provider vs Framework: Key Concepts
+
+**🔑 Understanding the Distinction:**
+
+- **Provider** (`provider=Provider.OPENAI`): The actual LLM service you're using
+  - **Required for every tracking setup**
+  - Examples: OpenAI, Anthropic, Google, AWS Bedrock, DeepSeek, Grok
+  - Determines how usage data is extracted and costs are calculated
+
+- **Framework** (`framework=Framework.LANGCHAIN`): Optional integration layer
+  - **Usually `None` (default) for direct API usage**
+  - Only needed for special framework integrations (currently: LangChain)
+  - Enables framework-specific features like automatic stream options injection
+
+**📋 When to Use Framework Parameter:**
+
+| Usage Scenario | Provider | Framework | Example |
+|----------------|----------|-----------|---------|
+| **Direct OpenAI API** | `Provider.OPENAI` | `None` (default) | Regular `openai.OpenAI()` usage |
+| **Direct Anthropic API** | `Provider.ANTHROPIC` | `None` (default) | Regular `anthropic.Anthropic()` usage |
+| **LangChain + OpenAI** | `Provider.OPENAI` | `Framework.LANGCHAIN` | Using `langchain_openai.ChatOpenAI` |
+| **LangChain + Anthropic** | `Provider.ANTHROPIC` | `Framework.LANGCHAIN` | Using `langchain_anthropic.ChatAnthropic` |
+| **DeepSeek API** | `Provider.DEEPSEEK` | `None` (default) | OpenAI-compatible DeepSeek API |
+
+**💡 Most Common Pattern:**
+```python
+# 95% of usage - direct API calls (framework=None by default)
+tracked_client = LLMTrackingProxy(client, provider=Provider.OPENAI)
+
+# 5% of usage - framework integrations (explicitly set framework)
+tracked_client = LLMTrackingProxy(client, provider=Provider.OPENAI, framework=Framework.LANGCHAIN)
+```
+
 ### Basic Usage
 
 > **🔑 CRITICAL: API Key Required**
@@ -61,9 +94,11 @@ client = openai.OpenAI(
 )
 
 # Wrap with LLMCosts tracking
+# Note: framework parameter omitted (defaults to None) for direct API usage
 tracked_client = LLMTrackingProxy(
     client, 
-    provider=Provider.OPENAI,
+    provider=Provider.OPENAI,  # REQUIRED: Specifies the LLM service
+    # framework parameter NOT needed for direct OpenAI API usage
     # This is the default and can be omitted
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
     debug=True
@@ -122,15 +157,17 @@ from llmcosts import get_usage_tracker, list_alerts, list_limits
 
 ## 🎯 Supported Providers
 
-| Provider | Import | Provider Enum | Installation |
-|----------|---------|---------------|-------------|
-| **OpenAI** | `import openai` | `Provider.OPENAI` | `pip install "llmcosts[openai]"` |
-| **Anthropic** | `import anthropic` | `Provider.ANTHROPIC` | `pip install "llmcosts[anthropic]"` |
-| **Google Gemini** | `import google.genai` | `Provider.GOOGLE` | `pip install "llmcosts[google]"` |
-| **AWS Bedrock** | `import boto3` | `Provider.AMAZON_BEDROCK` | `pip install "llmcosts[bedrock]"` |
-| **DeepSeek** | `import openai` | `Provider.DEEPSEEK` | `pip install "llmcosts[openai]"` |
-| **Grok/xAI** | `import openai` | `Provider.XAI` | `pip install "llmcosts[openai]"` |
-| **LangChain** | `import langchain_openai` | `Provider.OPENAI` | `pip install "llmcosts[langchain]"` |
+| Provider | Import | Provider Enum | Framework | Installation |
+|----------|---------|---------------|-----------|-------------|
+| **OpenAI** | `import openai` | `Provider.OPENAI` | `None` (default) | `pip install "llmcosts[openai]"` |
+| **Anthropic** | `import anthropic` | `Provider.ANTHROPIC` | `None` (default) | `pip install "llmcosts[anthropic]"` |
+| **Google Gemini** | `import google.genai` | `Provider.GOOGLE` | `None` (default) | `pip install "llmcosts[google]"` |
+| **AWS Bedrock** | `import boto3` | `Provider.AMAZON_BEDROCK` | `None` (default) | `pip install "llmcosts[bedrock]"` |
+| **DeepSeek** | `import openai` | `Provider.DEEPSEEK` | `None` (default) | `pip install "llmcosts[openai]"` |
+| **Grok/xAI** | `import openai` | `Provider.XAI` | `None` (default) | `pip install "llmcosts[openai]"` |
+| **LangChain + OpenAI** | `import langchain_openai` | `Provider.OPENAI` | `Framework.LANGCHAIN` | `pip install "llmcosts[langchain]"` |
+
+**Note:** LangChain is a framework, not a provider. When using LangChain, you specify both the underlying provider (e.g., `Provider.OPENAI`) and the framework (`Framework.LANGCHAIN`).
 
 ## 💻 Usage Examples
 
@@ -139,7 +176,6 @@ from llmcosts import get_usage_tracker, list_alerts, list_limits
 ```python
 import os
 from llmcosts.tracker import LLMTrackingProxy, Provider
-from llmcosts.tracker.frameworks import Framework
 import openai
 
 client = openai.OpenAI(
@@ -147,7 +183,8 @@ client = openai.OpenAI(
 )
 tracked_client = LLMTrackingProxy(
     client, 
-    provider=Provider.OPENAI,
+    provider=Provider.OPENAI,  # REQUIRED: Specifies this is OpenAI
+    # framework=None by default for direct OpenAI API usage
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
 )
 
@@ -180,7 +217,8 @@ client = anthropic.Anthropic(
 )
 tracked_client = LLMTrackingProxy(
     client, 
-    provider=Provider.ANTHROPIC,
+    provider=Provider.ANTHROPIC,  # REQUIRED: Specifies this is Anthropic
+    # framework=None by default for direct Anthropic API usage
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
 )
 
@@ -203,7 +241,8 @@ client = genai.Client(
 )
 tracked_client = LLMTrackingProxy(
     client, 
-    provider=Provider.GOOGLE,
+    provider=Provider.GOOGLE,  # REQUIRED: Specifies this is Google
+    # framework=None by default for direct Google API usage
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
 )
 
@@ -229,7 +268,8 @@ client = boto3.client(
 )
 tracked_client = LLMTrackingProxy(
     client, 
-    provider=Provider.AMAZON_BEDROCK,
+    provider=Provider.AMAZON_BEDROCK,  # REQUIRED: Specifies this is AWS Bedrock
+    # framework=None by default for direct Bedrock API usage
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
 )
 
@@ -257,7 +297,8 @@ deepseek_client = openai.OpenAI(
 )
 tracked_deepseek = LLMTrackingProxy(
     deepseek_client, 
-    provider=Provider.DEEPSEEK,
+    provider=Provider.DEEPSEEK,  # REQUIRED: Specifies this is DeepSeek
+    # framework=None by default for direct DeepSeek API usage
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
 )
 
@@ -268,7 +309,8 @@ grok_client = openai.OpenAI(
 )
 tracked_grok = LLMTrackingProxy(
     grok_client, 
-    provider=Provider.XAI,
+    provider=Provider.XAI,  # REQUIRED: Specifies this is Grok/xAI
+    # framework=None by default for direct Grok API usage
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
 )
 ```
@@ -289,20 +331,25 @@ pip install langchain-core
 
 #### 🔑 Critical Integration Pattern
 
-**⚠️ Important**: LangChain models require **sub-clients**, not the full tracked client:
+**⚠️ Important**: LangChain integration requires the `framework=Framework.LANGCHAIN` parameter:
 
 ```python
-from llmcosts.tracker import LLMTrackingProxy, Provider
+from llmcosts.tracker import LLMTrackingProxy, Provider, Framework
 from langchain_openai import OpenAI, ChatOpenAI
 import openai
 
-# Step 1: Create tracked OpenAI client with LangChain integration
+# Step 1: Create tracked OpenAI client with LangChain framework integration
 openai_client = openai.OpenAI(api_key="your-key")
 tracked_client = LLMTrackingProxy(
     openai_client,
-    provider=Provider.OPENAI,
-    framework=Framework.LANGCHAIN,
+    provider=Provider.OPENAI,        # REQUIRED: The actual LLM provider (OpenAI)
+    framework=Framework.LANGCHAIN,   # REQUIRED: Enables LangChain-specific features
 )
+
+# ✨ Why framework=Framework.LANGCHAIN is needed:
+# - Enables automatic stream_options injection for OpenAI streaming
+# - Allows seamless streaming without manual stream_options configuration
+# - Optimizes usage tracking for LangChain's specific API patterns
 
 # Step 2: Pass correct sub-clients to LangChain models
 llm = OpenAI(
@@ -489,8 +536,8 @@ response = streaming_chat.invoke([HumanMessage(content="Tell me about the ocean"
 # Context tracking for LangChain usage
 tracked_client = LLMTrackingProxy(
     openai_client,
-    provider=Provider.OPENAI,
-    framework=Framework.LANGCHAIN,
+    provider=Provider.OPENAI,        # REQUIRED: The LLM provider
+    framework=Framework.LANGCHAIN,   # REQUIRED: Enable LangChain integration
     context={
         "framework": "langchain",
         "user_id": "user_123",
@@ -1027,7 +1074,8 @@ if model:
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `target` | Any | Required | The LLM client to wrap |
-| `provider` | Provider | Required | Provider enum specifying the LLM service |
+| `provider` | Provider | Required | Provider enum specifying the LLM service (OpenAI, Anthropic, etc.) |
+| `framework` | Framework | `None` | **Optional** framework integration (e.g., `Framework.LANGCHAIN`). **Usually `None` for direct API usage.** Only needed for special integrations. |
 | `debug` | bool | `False` | Enable debug logging |
 | `sync_mode` | bool | `False` | Wait for usage tracker (good for testing) |
 | `remote_save` | bool | `True` | Save usage events to remote server |
@@ -1073,7 +1121,8 @@ user_context = {
 
 tracked_client = LLMTrackingProxy(
     client,
-    provider=Provider.OPENAI,
+    provider=Provider.OPENAI,  # REQUIRED: Specifies the LLM provider
+    # framework=None by default for direct OpenAI API usage
     context=user_context
 )
 
@@ -1344,7 +1393,8 @@ tracked_client = LLMTrackingProxy(
 # Enable synchronous mode for testing
 tracked_client = LLMTrackingProxy(
     client,
-    provider=Provider.OPENAI,
+    provider=Provider.OPENAI,  # REQUIRED: Specifies the LLM provider
+    # framework=None by default for direct API usage
     sync_mode=True,      # Wait for tracking to complete
     debug=True,          # Enable debug logging
     remote_save=False    # Don't save during testing

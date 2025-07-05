@@ -16,6 +16,7 @@ Perform immediate API calls to individual providers with real-time endpoint vali
 
 ```bash
 # Manual testing - test a specific provider/model immediately
+# Note: These test direct API usage (framework=None by default)
 uv run python tests/check.py openai gpt-4o-mini
 uv run python tests/check.py anthropic claude-3-5-haiku-20241022 --stream
 
@@ -23,6 +24,31 @@ uv run python tests/check.py anthropic claude-3-5-haiku-20241022 --stream
 uv run python tests/check.py --test                              # All tests
 uv run python tests/check.py --test --test-provider openai       # OpenAI only
 uv run python tests/check.py --test --infrastructure             # Infrastructure tests
+```
+
+## Provider vs Framework Testing
+
+**Understanding Test Coverage:**
+
+- **Provider Tests**: Test the actual LLM services (OpenAI, Anthropic, etc.) with `framework=None` (default)
+- **Framework Tests**: Test integrations like LangChain with `framework=Framework.LANGCHAIN`
+
+**Test Organization:**
+- Most tests cover **direct API usage** (provider only, no framework)
+- LangChain-specific tests are in separate files (`test_langchain_*.py`)
+- Framework parameter is only used when testing special integrations
+
+**Example Test Patterns:**
+```python
+# Direct API testing (95% of tests) - framework=None by default
+tracked_client = LLMTrackingProxy(client, provider=Provider.OPENAI)
+
+# LangChain integration testing (5% of tests) - framework explicitly set
+tracked_client = LLMTrackingProxy(
+    client, 
+    provider=Provider.OPENAI,        # Still the actual LLM provider
+    framework=Framework.LANGCHAIN    # Enables LangChain features
+)
 ```
 
 ## Test Structure Overview
