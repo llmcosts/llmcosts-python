@@ -18,7 +18,10 @@ class LLMCostsClient:
     """Simple wrapper around the llmcosts.com REST API."""
 
     def __init__(
-        self, api_key: Optional[str] = None, base_url: Optional[str] = None
+        self,
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+        framework: Optional[str] = None,
     ) -> None:
         env = Env()
         api_key = api_key or env.str("LLMCOSTS_API_KEY", None)
@@ -29,6 +32,7 @@ class LLMCostsClient:
         )
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
+        self.framework = framework
         self.session = requests.Session()
         self.session.headers.update(
             {

@@ -12,6 +12,7 @@ from typing import Any, Callable, Dict, Optional
 from ..client import LLMCostsClient
 from ..exceptions import TriggeredLimitError
 from .providers import Provider
+from .frameworks import Framework
 from .registry import get_usage_handler
 from .usage_delivery import UsageTracker, get_usage_tracker, set_global_usage_tracker
 
@@ -42,19 +43,21 @@ class LLMTrackingProxy:
         self,
         target: Any,
         provider: Provider,
+        framework: Optional[Framework] = None,
         debug: bool = False,
         sync_mode: bool = False,
         remote_save: bool = True,
         context: Optional[Dict[str, Any]] = None,
         response_callback: Optional[Callable[[Any], None]] = None,
         api_key: Optional[str] = None,
-        client_customer_key: Optional[str] = None,
-    ):
+            client_customer_key: Optional[str] = None,
+        ):
         """Initialize the tracking proxy.
 
         Args:
             target: The LLM client to wrap (OpenAI, Anthropic, etc.)
             provider: The Provider enum value specifying which provider this is
+            framework: Optional framework integration (e.g. ``Framework.LANGCHAIN``)
             debug: If True, enable debug logging. Otherwise logs errors only.
             sync_mode: If True, wait for the usage tracker to return (good for debugging/testing).
             remote_save: If True, tell the remote server to save cost events.
@@ -67,6 +70,7 @@ class LLMTrackingProxy:
         self._target = target
         self._provider = provider
         self._debug = debug  # Store debug setting to preserve it for child proxies
+        self._framework = framework
         self._sync_mode = sync_mode
         self._remote_save = remote_save
         self._context = context.copy() if context else None
@@ -77,6 +81,10 @@ class LLMTrackingProxy:
 
         # Handle API key and set up tracker
         self._setup_tracker(api_key, sync_mode)
+
+        # Enable framework-specific behavior
+        if self._framework == Framework.LANGCHAIN:
+            self.enable_langchain_mode()
 
         # When debugging, set the root logger level to DEBUG.
         # This is necessary for pytest's caplog to capture the messages.
@@ -128,7 +136,9 @@ class LLMTrackingProxy:
             "LLMCOSTS_API_ENDPOINT", "https://llmcosts.com/api/v1/usage"
         )
         client = LLMCostsClient(
-            api_key=final_api_key, base_url=api_endpoint.rsplit("/", 1)[0]
+            api_key=final_api_key,
+            base_url=api_endpoint.rsplit("/", 1)[0],
+            framework=self._framework.value if self._framework else None,
         )
         tracker = UsageTracker(
             api_endpoint=api_endpoint,
@@ -245,6 +255,11 @@ class LLMTrackingProxy:
         return self._provider
 
     @property
+    def framework(self) -> Optional[Framework]:
+        """Get the framework this proxy was initialized with."""
+        return self._framework
+
+    @property
     def sync_mode(self) -> bool:
         """Get the current sync_mode setting."""
         return self._sync_mode
@@ -352,6 +367,7 @@ class LLMTrackingProxy:
             child_proxy = self.__class__(
                 attr,
                 provider=self._provider,
+                framework=self._framework,
                 debug=self._debug,
                 sync_mode=self._sync_mode,
                 remote_save=self._remote_save,

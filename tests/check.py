@@ -62,6 +62,7 @@ from environs import Env
 
 from llmcosts.tracker import LLMTrackingProxy
 from llmcosts.tracker.providers import Provider
+from llmcosts.tracker.frameworks import Framework
 
 # Load environment variables from .env file in the tests directory
 env = Env()
@@ -197,7 +198,12 @@ def run_manual_test(provider: str, model: str, stream: bool = False) -> None:
         raise ValueError(f"Unknown provider: {provider}")
 
     proxy = LLMTrackingProxy(
-        client, provider=provider_enum, debug=True, sync_mode=True, api_key=api_key
+        client,
+        provider=provider_enum,
+        debug=True,
+        sync_mode=True,
+        api_key=api_key,
+        framework=Framework.LANGCHAIN if provider == "langchain" else None,
     )
 
     try:
@@ -293,9 +299,6 @@ def run_manual_test(provider: str, model: str, stream: bool = False) -> None:
                     "langchain-openai not installed. "
                     "Please install it with: pip install langchain-openai"
                 )
-
-            # Enable LangChain mode for compatibility
-            proxy.enable_langchain_mode()
 
             # Create LangChain model using the tracked chat completions client
             langchain_model = ChatOpenAI(

@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from llmcosts.tracker import LLMTrackingProxy
 from llmcosts.tracker.providers import Provider
+from llmcosts.tracker.frameworks import Framework
 
 # Load environment variables from .env file in the tests directory
 env = Env()
@@ -41,9 +42,11 @@ class TestLangChainStreaming:
     def tracked_openai_client(self, openai_client):
         """Create a tracked OpenAI client for LangChain."""
         tracked_client = LLMTrackingProxy(
-            openai_client, provider=Provider.OPENAI, debug=True
+            openai_client,
+            provider=Provider.OPENAI,
+            debug=True,
+            framework=Framework.LANGCHAIN,
         )
-        tracked_client.enable_langchain_mode()  # Enable LangChain compatibility
         return tracked_client
 
     @pytest.fixture
