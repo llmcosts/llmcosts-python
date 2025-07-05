@@ -6,13 +6,19 @@
 
 **LLMCosts** is a comprehensive LLM cost tracking and management platform that helps developers and agencies monitor, analyze, and optimize their AI spending across all major providers. **[Sign up for a free account at llmcosts.com](https://llmcosts.com)** to access real-time analytics, budget alerts, client billing tools, and accounting integrations.
 
-**Free tier includes 2 million tokens per month** with no credit card required. Paid plans start at $19/month for advanced features like forecasting, Xero/QuickBooks integration, and unlimited users.
-
 A universal Python wrapper that intercepts LLM API responses and extracts usage information for comprehensive cost tracking. Works as a drop-in replacement for your existing LLM clients with zero code changes to your API calls.
 
 **🎯 Supports**: OpenAI (any OpenAI-compatible APIs -- DeepSeek, Grok, etc.), Anthropic, Google Gemini, AWS Bedrock, and LangChain.
 
 ## 🚀 Quick Start
+
+But wait! Just a quick note: 
+
+> **🔑 CRITICAL: API Key Required**
+>
+> Before using LLMCosts, you **MUST** have an LLMCosts API key. **[Sign up for a free account at llmcosts.com](https://llmcosts.com)** to get your API key.
+>
+> **Without an API key, none of the LLMCosts tracking will work!**
 
 ### Installation
 
@@ -38,12 +44,6 @@ uv add llmcosts[all]              # All providers
 ```
 
 ### Basic Usage
-
-> **🔑 CRITICAL: API Key Required**
->
-> Before using LLMCosts, you **MUST** have an LLMCosts API key. **[Sign up for a free account at llmcosts.com](https://llmcosts.com)** to get your API key.
->
-> **Without an API key, none of the LLMCosts tracking will work!**
 
 ```python
 import os
