@@ -2,6 +2,10 @@
 
 LLMCosts provides seamless integration with LangChain, automatically tracking usage for all your LangChain workflows including streaming, batch operations, and complex chains. **Zero code changes needed** - usage tracking happens automatically!
 
+**🔒 Privacy Advantage**: Unlike LangChain's default behavior (which captures requests, responses, and more), LLMCosts NEVER sees your API keys, prompts, or responses. We only extract usage metadata (tokens, costs, model info) for cost tracking. Your data stays completely private.
+
+**🔄 Universal Proxy**: The same `LLMTrackingProxy` works with any LLM provider in LangChain - OpenAI, Anthropic, Google, and more. No need for provider-specific wrappers.
+
 ## 📦 Prerequisites
 
 ```bash

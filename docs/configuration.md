@@ -2,6 +2,10 @@
 
 This guide covers all configuration options, environment variables, and advanced settings for LLMCosts.
 
+**🔒 Privacy & Security**: LLMCosts is designed with privacy-first principles. We NEVER see your API keys, requests, or responses. Only usage metadata (tokens, costs, model info) is extracted from response objects and transmitted. Your sensitive data stays completely private.
+
+**🔄 Universal Compatibility**: One `LLMTrackingProxy` configuration works with ANY LLM provider's SDK. No need for different configurations per provider.
+
 ## 🔧 LLMTrackingProxy Parameters
 
 | Parameter | Type | Default | Description |
@@ -322,7 +326,7 @@ response = tracked_client.chat.completions.create(
 
 ## 📊 Output Format
 
-Usage data is logged as structured JSON:
+Usage data is logged as structured JSON. **This is the ONLY data LLMCosts ever sees or transmits** - no API keys, requests, or responses:
 
 ```json
 {
@@ -345,14 +349,16 @@ Usage data is logged as structured JSON:
 
 ### Field Descriptions
 
-- **usage**: Token/unit counts (varies by provider)
+- **usage**: Token/unit counts extracted from response metadata (varies by provider)
 - **model_id**: Model identifier used for the request
-- **response_id**: Unique response identifier
-- **timestamp**: ISO 8601 timestamp
+- **response_id**: Unique response identifier from the provider
+- **timestamp**: ISO 8601 timestamp when the response was processed
 - **provider**: LLM provider name
-- **service_tier**: Service tier (when available)
-- **context**: Custom tracking data
+- **service_tier**: Service tier when available (e.g., OpenAI's service tier)
+- **context**: Custom tracking data you choose to include
 - **remote_save**: Only included when `false`
+
+**🔒 Privacy Note**: This metadata is extracted from the response object's usage/metadata fields only. LLMCosts never accesses request content, response content, or API keys.
 
 ## 🏗️ Multi-User Applications
 

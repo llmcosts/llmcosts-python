@@ -2,6 +2,10 @@
 
 This guide covers common issues and solutions when using LLMCosts.
 
+**🔒 Privacy During Debugging**: Even when debug mode is enabled, LLMCosts NEVER logs or transmits your API keys, requests, or responses. Debug output only shows usage metadata extraction and transmission status.
+
+**🔄 Universal Troubleshooting**: The same troubleshooting techniques work for ANY LLM provider since we use one universal tracking proxy.
+
 ## 🔧 Common Issues
 
 ### 1. Missing API Key Error

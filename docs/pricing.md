@@ -2,6 +2,10 @@
 
 LLMCosts provides comprehensive pricing information and cost calculation capabilities, allowing you to get real-time pricing data and calculate costs for your LLM usage.
 
+**🔄 Universal Compatibility**: The same pricing and model discovery functions work with ANY LLM provider. One SDK, all providers.
+
+**🔒 Privacy-First**: Model discovery and cost calculations happen locally using our pricing database. No sensitive data is transmitted during these operations.
+
 ## 🔍 Model Discovery
 
 ### Models SDK Functions

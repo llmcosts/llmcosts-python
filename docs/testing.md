@@ -2,6 +2,10 @@
 
 LLMCosts includes comprehensive testing for all supported LLM providers, endpoint integration, and response callbacks. The test suite supports both automated testing and manual validation modes.
 
+**🔒 Privacy During Testing**: All tests maintain our privacy-first principles. Even during testing, only usage metadata is processed - never API keys, requests, or responses.
+
+**🔄 Universal Test Framework**: The same test patterns work across ANY LLM provider since we use one universal tracking proxy. Add new providers without changing test architecture.
+
 ## 🚀 Quick Start
 
 ### 1. Install Test Dependencies

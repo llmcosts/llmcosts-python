@@ -8,6 +8,10 @@
 
 A universal Python wrapper that intercepts LLM API responses and extracts usage information for comprehensive cost tracking. Works as a drop-in replacement for your existing LLM clients with zero code changes to your API calls.
 
+**🔒 Privacy-First**: LLMCosts NEVER sees your API keys, requests, or responses. We only extract usage data (tokens, costs, model info) from responses. Unlike other frameworks that capture everything, we prioritize your privacy and security above all else.
+
+**🔄 Universal Compatibility**: One tracking proxy works with ANY LLM provider's SDK. No need for different wrappers per provider - the same `LLMTrackingProxy` works with OpenAI, Anthropic, Google, AWS Bedrock, and any other provider.
+
 **🎯 Supports**: OpenAI (any OpenAI-compatible APIs -- DeepSeek, Grok, etc.), Anthropic, Google Gemini, AWS Bedrock, and LangChain.
 
 ## 🚀 Quick Start
@@ -68,6 +72,7 @@ response = tracked_client.chat.completions.create(
 )
 
 # Usage automatically logged as structured JSON
+# 🔒 Privacy: Only usage metadata is extracted - never your API keys, requests, or responses
 ```
 
 ### Environment Setup
@@ -94,8 +99,9 @@ AWS_SECRET_ACCESS_KEY=your-aws-secret-key-here
 
 ## 📋 Key Features
 
-- **🔄 Universal Compatibility**: Works with all major LLM providers
-- **📊 Automatic Usage Tracking**: Captures tokens, costs, model info, and timestamps
+- **🔄 Universal Compatibility**: One proxy works with ANY LLM provider's SDK - OpenAI, Anthropic, Google, AWS, and more
+- **🔒 Privacy-First Design**: NEVER sees API keys, requests, or responses - only usage data (tokens, costs, model info)
+- **📊 Automatic Usage Tracking**: Captures tokens, costs, model info, and timestamps from response metadata
 - **🎛️ Dynamic Configuration**: Change settings on-the-fly without restarting
 - **💾 Smart Delivery**: Resilient background delivery with retry logic
 - **📝 Custom Context**: Add user/session tracking data to every request

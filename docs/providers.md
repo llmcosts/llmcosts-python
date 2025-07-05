@@ -1,6 +1,8 @@
 # Provider Integration Guide
 
-This guide covers how to integrate LLMCosts with all supported LLM providers. Each provider has specific setup requirements and usage patterns.
+This guide covers how to integrate LLMCosts with all supported LLM providers. **The same `LLMTrackingProxy` works with ANY LLM provider's SDK** - no need for different wrappers per provider.
+
+**🔒 Privacy-First**: LLMCosts NEVER sees your API keys, requests, or responses. We only extract usage metadata (tokens, costs, model info) from the response objects. Your data stays private and secure.
 
 ## 🎯 Supported Providers
 
