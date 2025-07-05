@@ -139,6 +139,7 @@ from llmcosts import get_usage_tracker, list_alerts, list_limits
 ```python
 import os
 from llmcosts.tracker import LLMTrackingProxy, Provider
+from llmcosts.tracker.frameworks import Framework
 import openai
 
 client = openai.OpenAI(
@@ -295,14 +296,15 @@ from llmcosts.tracker import LLMTrackingProxy, Provider
 from langchain_openai import OpenAI, ChatOpenAI
 import openai
 
-# Step 1: Create tracked OpenAI client  
+# Step 1: Create tracked OpenAI client with LangChain integration
 openai_client = openai.OpenAI(api_key="your-key")
-tracked_client = LLMTrackingProxy(openai_client, provider=Provider.OPENAI)
+tracked_client = LLMTrackingProxy(
+    openai_client,
+    provider=Provider.OPENAI,
+    framework=Framework.LANGCHAIN,
+)
 
-# Step 2: Enable LangChain compatibility mode
-tracked_client.enable_langchain_mode()
-
-# Step 3: Pass correct sub-clients to LangChain models
+# Step 2: Pass correct sub-clients to LangChain models
 llm = OpenAI(
     client=tracked_client.completions,  # ✅ Use .completions for OpenAI LLM
     model="gpt-3.5-turbo-instruct",
@@ -342,8 +344,11 @@ import openai
 
 # Setup tracked client
 openai_client = openai.OpenAI(api_key="your-key")
-tracked_client = LLMTrackingProxy(openai_client, provider=Provider.OPENAI)
-tracked_client.enable_langchain_mode()  # Enable LangChain compatibility
+tracked_client = LLMTrackingProxy(
+    openai_client,
+    provider=Provider.OPENAI,
+    framework=Framework.LANGCHAIN,
+)
 
 # OpenAI LLM (legacy completions)
 llm = OpenAI(
@@ -483,15 +488,15 @@ response = streaming_chat.invoke([HumanMessage(content="Tell me about the ocean"
 ```python
 # Context tracking for LangChain usage
 tracked_client = LLMTrackingProxy(
-    openai_client, 
+    openai_client,
     provider=Provider.OPENAI,
+    framework=Framework.LANGCHAIN,
     context={
         "framework": "langchain",
         "user_id": "user_123",
         "session_id": "session_456"
     }
 )
-tracked_client.enable_langchain_mode()  # Enable LangChain compatibility
 
 # Response callbacks
 def track_langchain_response(response):
@@ -528,9 +533,9 @@ response = chat_model.invoke([HumanMessage(content="Test")])
    - **OpenAI Completions**: Multiple prompts = 1 API call = 1 usage log
    - **ChatOpenAI**: Multiple messages = Multiple API calls = Multiple usage logs
 
-2. **LangChain Mode Required**:
-   - **Must call** `tracked_client.enable_langchain_mode()` before using with LangChain
-   - This enables automatic `stream_options` injection for seamless streaming
+2. **LangChain Integration**:
+   - Pass ``framework=Framework.LANGCHAIN`` when creating ``LLMTrackingProxy``
+   - This enables automatic ``stream_options`` injection for seamless streaming
    - Without this, streaming calls will raise validation errors
 
 3. **Streaming Requirements**:
@@ -592,8 +597,11 @@ from langchain_openai import ChatOpenAI
 import openai
 
 client = openai.OpenAI(api_key="your-key")
-tracked_client = LLMTrackingProxy(client, provider=Provider.OPENAI)  # Add this line
-tracked_client.enable_langchain_mode()  # Add this line
+tracked_client = LLMTrackingProxy(
+    client,
+    provider=Provider.OPENAI,
+    framework=Framework.LANGCHAIN,
+)  # Add this line
 chat_model = ChatOpenAI(
     client=tracked_client.chat.completions,  # Change this line
     model="gpt-4o-mini",
