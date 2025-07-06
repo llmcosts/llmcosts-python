@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2025-01-06
+
+### Added
+- New comprehensive SDK helper functions documentation (`docs/sdk-functions.md`)
+- Enhanced events management with filtering, search, and export capabilities (`list_events`, `search_events`, `export_events`)
+- Added `list_threshold_events()` function for managing active threshold events
+- Network resilience in tests with retry logic and extended timeout handling (30s)
+- New `@pytest.mark.network` test marker for network-dependent tests
+
+### Changed
+- **BREAKING**: Restructured SDK helper functions to accurately match LLMCosts API endpoints
+- Enhanced `events.py` with rich filtering, search, and export functionality matching OpenAPI spec
+- Improved test reliability with extended timeouts for network calls
+- Updated main README with link to new SDK functions reference guide
+
+### Removed
+- **BREAKING**: Removed `limits.py` module (functionality consolidated into `thresholds.py`)
+- **BREAKING**: Removed `customers.py` module (endpoints don't exist in actual API)
+- **BREAKING**: Removed `alerts.py` module (functionality handled by thresholds with `type='alert'`)
+
+### Fixed
+- Network timeout issues in OpenAI Responses API tests
+- Test flakiness due to TLS handshake timeouts in network-dependent tests
+- Import errors and module dependencies after SDK restructuring
+- Legacy CRUD operations in events now properly raise `NotImplementedError` with helpful messages
+
+### Migration Guide
+- **Import Changes**: Remove imports for `limits`, `customers`, and `alerts` modules
+- **Events API**: Use new filtering capabilities in `list_events()` instead of basic CRUD operations
+- **Thresholds**: Use `list_threshold_events()` for active events, existing threshold functions unchanged
+- **Testing**: Network-dependent tests now more resilient with automatic retry logic
+
 ## [0.2.1] - 2024-01-15
 
 ### Changed
@@ -107,6 +139,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apache 2.0 license
 - Built with modern Python packaging (pyproject.toml)
 
+[0.2.2]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.2
 [0.2.1]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.1
 [0.2.0]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.0
 [0.1.2]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.1.2
