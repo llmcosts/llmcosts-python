@@ -30,7 +30,8 @@ But wait! Just a quick note:
 # Core library only (minimal dependencies)
 pip install llmcosts
 
-# With specific providers (quote for zsh compatibility)
+# To install llmcosts along with the SDKs from specific 
+# providers (quote for zsh compatibility)  (for testing, etc)
 pip install "llmcosts[openai]"      # OpenAI + compatible APIs (DeepSeek, Grok, etc.)
 pip install "llmcosts[anthropic]"   # Anthropic Claude
 pip install "llmcosts[google]"      # Google Gemini
