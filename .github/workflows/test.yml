@@ -65,7 +65,7 @@ jobs:
           try:
               from llmcosts.tracker import LLMTrackingProxy, Provider
               from llmcosts.client import LLMCostsClient
-              from llmcosts import models, thresholds, limits
+              from llmcosts import models, thresholds, events
               print('✅ All imports successful')
           except ImportError as e:
               print(f'❌ Import error: {e}')

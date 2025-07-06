@@ -125,6 +125,7 @@ export LLMCOSTS_API_KEY="your-llmcosts-api-key-here"
 - **[🎯 Providers](docs/providers.md)** - Provider-specific integration guides with examples
 - **[🔗 LangChain Integration](docs/langchain.md)** - Complete LangChain integration guide
 - **[💰 Pricing & Models](docs/pricing.md)** - Model discovery, pricing info, and cost calculation
+- **[🛠️ SDK Helper Functions](docs/sdk-functions.md)** - Complete reference for all SDK helper functions
 - **[🔍 Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
 - **[🧪 Testing](docs/testing.md)** - Comprehensive testing documentation
 
