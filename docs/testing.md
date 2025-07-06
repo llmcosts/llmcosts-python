@@ -18,7 +18,7 @@ uv sync --extra test
 uv pip install -e ".[test]"
 
 # Or using pip with requirements file
-pip install -r requirements-test.txt
+pip install -e ".[test]"
 ```
 
 ### 2. Environment Setup

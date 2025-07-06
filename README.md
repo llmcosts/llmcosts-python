@@ -128,6 +128,7 @@ export LLMCOSTS_API_KEY="your-llmcosts-api-key-here"
 - **[🛠️ SDK Helper Functions](docs/sdk-functions.md)** - Complete reference for all SDK helper functions
 - **[🔍 Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
 - **[🧪 Testing](docs/testing.md)** - Comprehensive testing documentation
+- **[🚀 Deployment](docs/deployment.md)** - Deployment guide for PyPI and version management
 
 ### Quick Links
 
@@ -297,7 +298,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📈 Changelog
 
-### v0.1.0 (Current)
+### v0.2.2 (Current)
+- New SDK helper functions with comprehensive documentation
+- Enhanced events management with filtering, search, and export
+- Added `list_threshold_events()` function for threshold event tracking
+- Improved network resilience in tests with retry logic
+- **Breaking changes**: Removed `limits.py`, `customers.py`, and `alerts.py` modules
+- Migration guide available in [CHANGELOG.md](CHANGELOG.md)
+
+### v0.1.0
 - Universal LLM provider support
 - Dynamic configuration with property setters
 - Context tracking for user/session data
