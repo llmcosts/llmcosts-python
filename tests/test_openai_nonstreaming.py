@@ -36,7 +36,8 @@ class TestOpenAINonStreaming:
                 "Please copy env.example to tests/.env and add your API keys."
             )
 
-        return openai.OpenAI(api_key=api_key)
+        # Use longer timeout to handle network latency issues
+        return openai.OpenAI(api_key=api_key, timeout=30.0)
 
     @pytest.fixture
     def tracked_client(self, openai_client):

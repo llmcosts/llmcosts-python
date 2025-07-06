@@ -1,3 +1,11 @@
+"""
+Tests for OpenAI Responses API limit checking.
+
+Note: These tests require network connectivity to OpenAI API and may be flaky
+due to network timeouts or OpenAI API availability. Tests include retry logic
+and will skip if persistent network issues occur.
+"""
+
 from pathlib import Path
 from unittest.mock import patch
 
@@ -21,7 +29,8 @@ def openai_client():
         pytest.skip(
             "OPENAI_API_KEY not found in environment variables or tests/.env file"
         )
-    return openai.OpenAI(api_key=api_key)
+    # Use longer timeout to handle network latency issues
+    return openai.OpenAI(api_key=api_key, timeout=30.0)
 
 
 @pytest.fixture
@@ -54,6 +63,7 @@ def _block():
     }
 
 
+@pytest.mark.network
 class TestOpenAIResponsesLimit:
     def test_responses_nonstreaming_allowed(self, tracked_client):
         with patch.object(
@@ -61,8 +71,29 @@ class TestOpenAIResponsesLimit:
             "check_triggered_thresholds",
             return_value=_allow(),
         ):
-            res = tracked_client.responses.create(model="gpt-4o-mini", input="hi")
-            assert res
+            # Retry logic for network timeouts
+            max_retries = 3
+            last_exception = None
+
+            for attempt in range(max_retries):
+                try:
+                    res = tracked_client.responses.create(
+                        model="gpt-4o-mini", input="hi"
+                    )
+                    assert res
+                    return  # Success, exit the test
+                except (openai.APITimeoutError, openai.APIConnectionError) as e:
+                    last_exception = e
+                    if attempt < max_retries - 1:
+                        print(f"Network timeout on attempt {attempt + 1}, retrying...")
+                        continue
+                    else:
+                        pytest.skip(
+                            f"Skipping test due to persistent network issues: {e}"
+                        )
+                except Exception as e:
+                    # Re-raise non-network exceptions immediately
+                    raise e
 
     def test_responses_nonstreaming_blocked(self, tracked_client):
         with patch.object(
