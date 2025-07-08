@@ -1,6 +1,6 @@
 [project]
 name = "llmcosts"
-version = "0.2.4"
+version = "0.2.5"
 description = "A generic, provider-agnostic SDK wrapper that intercepts LLM API responses and extracts usage information for cost tracking with structured payload formatting."
 readme = "README.md"
 requires-python = ">=3.9"
