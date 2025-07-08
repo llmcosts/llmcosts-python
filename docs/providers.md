@@ -168,9 +168,9 @@ deepseek_client = openai.OpenAI(
     base_url="https://api.deepseek.com/v1"
 )
 tracked_deepseek = LLMTrackingProxy(
-    deepseek_client, 
-    provider=Provider.DEEPSEEK,  # REQUIRED: Specifies this is DeepSeek
-    # framework=None by default for direct DeepSeek API usage
+    deepseek_client,
+    provider=Provider.OPENAI,  # OpenAI-compatible API
+    base_url="https://api.deepseek.com/v1",
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
 )
 
@@ -188,13 +188,13 @@ from llmcosts.tracker import LLMTrackingProxy, Provider
 import openai
 
 grok_client = openai.OpenAI(
-    api_key=os.environ.get("XAI_API_KEY"), 
+    api_key=os.environ.get("XAI_API_KEY"),
     base_url="https://api.x.ai/v1"
 )
 tracked_grok = LLMTrackingProxy(
-    grok_client, 
-    provider=Provider.XAI,  # REQUIRED: Specifies this is Grok/xAI
-    # framework=None by default for direct Grok API usage
+    grok_client,
+    provider=Provider.OPENAI,  # OpenAI-compatible API
+    base_url="https://api.x.ai/v1",
     api_key=os.environ.get("LLMCOSTS_API_KEY"),
 )
 

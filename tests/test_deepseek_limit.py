@@ -26,7 +26,12 @@ def client():
 
 @pytest.fixture
 def tracked_client(client):
-    return LLMTrackingProxy(client, provider=Provider.DEEPSEEK, debug=True)
+    return LLMTrackingProxy(
+        client,
+        provider=Provider.OPENAI,
+        base_url="https://api.deepseek.com/v1",
+        debug=True,
+    )
 
 
 def _allow():

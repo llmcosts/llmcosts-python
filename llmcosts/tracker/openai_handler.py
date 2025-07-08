@@ -45,6 +45,7 @@ class OpenAIUsageHandler(UsageHandler):
         # attribute but no `choices` attribute.
         method_owner = str(getattr(attr, "__self__", ""))
         is_responses_api = "responses" in method_owner
+        base_url = kwargs.get("base_url")
 
         if is_responses_api:
             # For Responses API streaming, usage is nested in obj.response.usage
@@ -109,6 +110,9 @@ class OpenAIUsageHandler(UsageHandler):
         # Add service_tier if available
         if hasattr(obj, "service_tier") and obj.service_tier is not None:
             payload["service_tier"] = obj.service_tier
+
+        if base_url:
+            payload["base_url"] = base_url
 
         return self._add_common_fields(payload, obj)
 
