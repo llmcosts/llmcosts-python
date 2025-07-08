@@ -39,13 +39,23 @@ class TestDeepSeekNonStreaming:
 
     @pytest.fixture
     def tracked_deepseek_client(self, deepseek_client):
-        """Create a tracked DeepSeek client."""
+        """Create a tracked DeepSeek client with auto-extracted base_url."""
         return LLMTrackingProxy(
             deepseek_client,
             provider=Provider.OPENAI,
-            base_url="https://api.deepseek.com/v1",
             debug=True,
         )
+
+    def test_base_url_extraction(self, deepseek_client, tracked_deepseek_client):
+        """Test that base_url is automatically extracted from the OpenAI client."""
+        # Verify the original client has the correct base_url
+        assert deepseek_client.base_url == "https://api.deepseek.com/v1/"
+
+        # Verify the tracked client auto-extracted the base_url
+        assert tracked_deepseek_client.base_url == "https://api.deepseek.com/v1/"
+
+        # Verify the internal _base_url is set correctly
+        assert tracked_deepseek_client._base_url == "https://api.deepseek.com/v1/"
 
     def test_deepseek_chat_completions_non_streaming(
         self, tracked_deepseek_client, caplog
@@ -66,6 +76,9 @@ class TestDeepSeekNonStreaming:
         assert "prompt_tokens" in caplog.text
         assert "total_tokens" in caplog.text
 
+        # Verify base_url is included in the usage payload
+        assert "https://api.deepseek.com/v1/" in caplog.text
+
     def test_deepseek_coder_model(self, tracked_deepseek_client, caplog):
         """Test DeepSeek Coder model for code generation."""
         response = tracked_deepseek_client.chat.completions.create(
@@ -84,6 +97,9 @@ class TestDeepSeekNonStreaming:
         assert "response_id" in caplog.text
         assert "timestamp" in caplog.text
         assert "deepseek" in caplog.text.lower()
+
+        # Verify base_url is included in the usage payload
+        assert "https://api.deepseek.com/v1/" in caplog.text
 
 
 if __name__ == "__main__":

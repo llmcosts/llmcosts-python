@@ -43,6 +43,16 @@ class LLMTrackingProxy:
             provider=Provider.ANTHROPIC  # Required: specifies the LLM service
         )
 
+        # OpenAI-compatible APIs (DeepSeek, Grok, etc.) - base_url auto-extracted
+        deepseek_client = openai.OpenAI(
+            api_key="your-key",
+            base_url="https://api.deepseek.com/v1"
+        )
+        tracked_deepseek = LLMTrackingProxy(
+            deepseek_client,
+            provider=Provider.OPENAI  # base_url automatically extracted from client
+        )
+
         # LangChain integration - framework parameter required
         from langchain_openai import ChatOpenAI
         tracked_client = LLMTrackingProxy(
@@ -89,9 +99,10 @@ class LLMTrackingProxy:
             api_key: Optional LLMCOSTS_API_KEY. If None, will check environment variables.
                     If not found in environment either, will raise an error.
             client_customer_key: Optional customer key for multi-tenant applications.
-            base_url: Optional base URL for OpenAI-compatible endpoints. If set,
-                this value will be included in usage payloads for completions
-                tracking.
+            base_url: Optional base URL for OpenAI-compatible endpoints. If not provided,
+                will automatically extract from the target client's base_url attribute
+                (e.g., from OpenAI client). This value will be included in usage payloads
+                for completions tracking.
         """
         self._target = target
         self._provider = provider
@@ -102,7 +113,18 @@ class LLMTrackingProxy:
         self._context = context.copy() if context else None
         self._response_callback = response_callback
         self._client_customer_key = client_customer_key
-        self._base_url = base_url
+
+        # Auto-extract base_url from OpenAI client if not provided
+        if base_url is None and hasattr(target, "base_url"):
+            # Convert URL object to string if needed
+            extracted_url = target.base_url
+            if hasattr(extracted_url, "__str__"):
+                self._base_url = str(extracted_url)
+            else:
+                self._base_url = extracted_url
+        else:
+            self._base_url = base_url
+
         self._usage_handler = get_usage_handler(target)
         self._langchain_mode = False  # Initialize LangChain compatibility mode
 

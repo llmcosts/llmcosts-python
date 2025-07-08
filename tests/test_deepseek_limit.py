@@ -29,9 +29,20 @@ def tracked_client(client):
     return LLMTrackingProxy(
         client,
         provider=Provider.OPENAI,
-        base_url="https://api.deepseek.com/v1",
         debug=True,
     )
+
+
+def test_base_url_extraction(client, tracked_client):
+    """Test that base_url is automatically extracted from the OpenAI client."""
+    # Verify the original client has the correct base_url
+    assert client.base_url == "https://api.deepseek.com/v1/"
+
+    # Verify the tracked client auto-extracted the base_url
+    assert tracked_client.base_url == "https://api.deepseek.com/v1/"
+
+    # Verify the internal _base_url is set correctly
+    assert tracked_client._base_url == "https://api.deepseek.com/v1/"
 
 
 def _allow():
