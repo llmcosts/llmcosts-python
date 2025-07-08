@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2025-01-06
+
+### Added
+- **Auto-extraction of `base_url` from OpenAI clients**: The `LLMTrackingProxy` now automatically extracts the `base_url` from OpenAI client instances, eliminating the need for manual specification in most cases
+- **Enhanced DeepSeek support**: Improved integration with DeepSeek API by automatically detecting custom base URLs from client configuration
+- **Comprehensive end-to-end testing**: Added robust test coverage for `base_url` functionality including integration tests with real API calls
+
+### Changed
+- **Improved user experience**: Users no longer need to manually specify `base_url` when using standard OpenAI clients or providers with custom endpoints
+- **Enhanced proxy initialization**: `LLMTrackingProxy` now intelligently handles `base_url` extraction with fallback to explicit parameter if provided
+- **Better error handling**: Graceful handling of `base_url` extraction with proper string conversion to avoid JSON serialization issues
+
+### Fixed
+- **Dependency management**: Moved provider-specific SDKs (`openai`, `anthropic`, etc.) from main dependencies to optional extras, reducing core package size
+- **Test reliability**: Updated DeepSeek tests to use real API calls and verify `base_url` functionality end-to-end
+- **JSON serialization**: Fixed potential issues with `base_url` serialization in usage payloads
+
+### Technical Details
+- **Auto-detection**: `base_url` is automatically extracted from `client.base_url` attribute when available
+- **Fallback behavior**: Explicit `base_url` parameter still takes precedence over auto-extracted values
+- **String conversion**: Ensures `base_url` is always a string to prevent JSON serialization errors
+- **Backward compatibility**: All existing code continues to work without changes
+
 ## [0.2.2] - 2025-01-06
 
 ### Added
@@ -139,6 +162,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apache 2.0 license
 - Built with modern Python packaging (pyproject.toml)
 
+[0.2.3]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.3
 [0.2.2]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.2
 [0.2.1]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.1
 [0.2.0]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.0
