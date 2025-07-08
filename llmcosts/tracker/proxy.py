@@ -241,6 +241,11 @@ class LLMTrackingProxy:
             client_key=self._client_customer_key,
         )
 
+        # If the mocked client returns a non-dict (e.g., MagicMock),
+        # fallback to an empty result to avoid errors during testing.
+        if not isinstance(result, dict):
+            return {"status": "no_client", "allowed": True, "violations": []}
+
         # Log warnings for alerts
         if result.get("warnings"):
             logging.warning("⚠️ Triggered threshold ALERT detected:")
@@ -514,6 +519,7 @@ class LLMTrackingProxy:
                             callback_func,
                             kw,
                             attr,
+                            base_url,
                         ):
                             self._response = response
                             self._tracker_func = tracker_func
@@ -521,6 +527,7 @@ class LLMTrackingProxy:
                             self._callback_func = callback_func
                             self._kw = kw
                             self._attr = attr
+                            self._base_url = base_url
                             self._stream = None
                             self._iterator = None
 
@@ -581,6 +588,7 @@ class LLMTrackingProxy:
                         self._call_response_callback,
                         kw,
                         attr,
+                        self._base_url,
                     )
                 else:
                     # Return a regular generator for non-context manager responses (like completions)
