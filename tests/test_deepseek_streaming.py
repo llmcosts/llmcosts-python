@@ -40,7 +40,12 @@ class TestDeepSeekStreaming:
     @pytest.fixture
     def tracked_deepseek_client(self, deepseek_client):
         """Create a tracked DeepSeek client."""
-        return LLMTrackingProxy(deepseek_client, provider=Provider.DEEPSEEK, debug=True)
+        return LLMTrackingProxy(
+            deepseek_client,
+            provider=Provider.OPENAI,
+            base_url="https://api.deepseek.com/v1",
+            debug=True,
+        )
 
     def test_deepseek_chat_completions_streaming(self, tracked_deepseek_client, caplog):
         """Test streaming chat completion with DeepSeek captures usage."""

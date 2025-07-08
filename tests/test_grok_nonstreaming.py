@@ -40,7 +40,12 @@ class TestGrokNonStreaming:
     @pytest.fixture
     def tracked_grok_client(self, grok_client):
         """Create a tracked Grok client."""
-        return LLMTrackingProxy(grok_client, provider=Provider.XAI, debug=True)
+        return LLMTrackingProxy(
+            grok_client,
+            provider=Provider.OPENAI,
+            base_url="https://api.x.ai/v1",
+            debug=True,
+        )
 
     def test_grok_3_mini_model(self, tracked_grok_client, caplog):
         """Test Grok 3 mini model captures usage correctly."""

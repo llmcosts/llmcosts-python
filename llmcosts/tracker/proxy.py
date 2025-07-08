@@ -69,6 +69,7 @@ class LLMTrackingProxy:
         response_callback: Optional[Callable[[Any], None]] = None,
         api_key: Optional[str] = None,
         client_customer_key: Optional[str] = None,
+        base_url: Optional[str] = None,
     ):
         """Initialize the tracking proxy.
 
@@ -88,6 +89,9 @@ class LLMTrackingProxy:
             api_key: Optional LLMCOSTS_API_KEY. If None, will check environment variables.
                     If not found in environment either, will raise an error.
             client_customer_key: Optional customer key for multi-tenant applications.
+            base_url: Optional base URL for OpenAI-compatible endpoints. If set,
+                this value will be included in usage payloads for completions
+                tracking.
         """
         self._target = target
         self._provider = provider
@@ -98,6 +102,7 @@ class LLMTrackingProxy:
         self._context = context.copy() if context else None
         self._response_callback = response_callback
         self._client_customer_key = client_customer_key
+        self._base_url = base_url
         self._usage_handler = get_usage_handler(target)
         self._langchain_mode = False  # Initialize LangChain compatibility mode
 
@@ -331,6 +336,16 @@ class LLMTrackingProxy:
         """Set the client_customer_key setting."""
         self._client_customer_key = value
 
+    @property
+    def base_url(self) -> Optional[str]:
+        """Get the base_url used for OpenAI-compatible calls."""
+        return self._base_url
+
+    @base_url.setter
+    def base_url(self, value: Optional[str]) -> None:
+        """Set the base_url for subsequent calls."""
+        self._base_url = value
+
     def enable_langchain_mode(self) -> None:
         """Enable LangChain compatibility mode.
 
@@ -397,6 +412,7 @@ class LLMTrackingProxy:
                 response_callback=self._response_callback,
                 api_key=None,  # Child proxies use the already-set global tracker
                 client_customer_key=self._client_customer_key,
+                base_url=self._base_url,
             )
             # Pass the client reference to the child proxy for threshold checking
             child_proxy._llm_costs_client = self._llm_costs_client
@@ -441,7 +457,7 @@ class LLMTrackingProxy:
 
                         async for chunk in iterator:
                             payload = self._usage_handler.extract_usage_payload(
-                                chunk, **kw, attr=attr
+                                chunk, **kw, attr=attr, base_url=self._base_url
                             )
                             if payload:
                                 usage_found = True
@@ -455,14 +471,14 @@ class LLMTrackingProxy:
 
                         if last_chunk and not usage_found:
                             payload = self._usage_handler.extract_usage_payload(
-                                last_chunk, **kw, attr=attr
+                                last_chunk, **kw, attr=attr, base_url=self._base_url
                             )
                             self._track_usage(payload)
 
                     return agen()
 
                 payload = self._usage_handler.extract_usage_payload(
-                    res, **kw, attr=attr
+                    res, **kw, attr=attr, base_url=self._base_url
                 )
                 self._track_usage(payload)
                 return res
@@ -548,7 +564,10 @@ class LLMTrackingProxy:
                             for chunk in stream:
                                 # Track usage for this chunk
                                 payload = self._usage_handler.extract_usage_payload(
-                                    chunk, **self._kw, attr=self._attr
+                                    chunk,
+                                    **self._kw,
+                                    attr=self._attr,
+                                    base_url=self._base_url,
                                 )
                                 self._tracker_func(payload)
                                 # Call response callback with each chunk
@@ -578,7 +597,7 @@ class LLMTrackingProxy:
 
                         for chunk in iterator:
                             payload = self._usage_handler.extract_usage_payload(
-                                chunk, **kw, attr=attr
+                                chunk, **kw, attr=attr, base_url=self._base_url
                             )
                             if payload:
                                 usage_found = True
@@ -592,13 +611,18 @@ class LLMTrackingProxy:
 
                         if last_chunk and not usage_found:
                             payload = self._usage_handler.extract_usage_payload(
-                                last_chunk, **kw, attr=attr
+                                last_chunk,
+                                **kw,
+                                attr=attr,
+                                base_url=self._base_url,
                             )
                             self._track_usage(payload)
 
                     return gen()
 
-            payload = self._usage_handler.extract_usage_payload(res, **kw, attr=attr)
+            payload = self._usage_handler.extract_usage_payload(
+                res, **kw, attr=attr, base_url=self._base_url
+            )
             self._track_usage(payload)
             return res
 
