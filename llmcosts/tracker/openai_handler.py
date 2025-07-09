@@ -39,13 +39,14 @@ class OpenAIUsageHandler(UsageHandler):
         # Keep other model IDs as-is
         return model_id
 
-    def extract_usage_payload(self, obj: Any, attr: Any, **kwargs) -> Optional[Dict]:
+    def extract_usage_payload(
+        self, obj: Any, attr: Any, base_url: Optional[str] = None, **kwargs
+    ) -> Optional[Dict]:
         """Extract OpenAI usage payload with model, usage, and service_tier."""
         # The `responses` API sends usage in a final chunk that has a `usage`
         # attribute but no `choices` attribute.
         method_owner = str(getattr(attr, "__self__", ""))
         is_responses_api = "responses" in method_owner
-        base_url = kwargs.get("base_url")
 
         if is_responses_api:
             # For Responses API streaming, usage is nested in obj.response.usage

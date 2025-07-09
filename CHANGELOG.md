@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] - 2025-01-17
+
+### Fixed
+- **OpenAI handler `base_url` parameter passing**: Fixed critical bug where `base_url` was not being included in usage payloads for non-OpenAI providers (DeepSeek, Grok, Fireworks, etc.) when using OpenAI-compatible APIs
+- **Parameter extraction in `extract_usage_payload`**: Modified OpenAI handler to properly receive `base_url` as an explicit parameter instead of incorrectly trying to extract it from `kwargs`
+
+### Added
+- **Comprehensive test coverage for `base_url` fix**: Added `tests/test_base_url_payload_fix.py` with 7 test methods covering unit tests, integration tests, mocking, edge cases, multiple providers, and streaming support
+- **Enhanced validation for parameter passing**: Added tests to verify that `LLMTrackingProxy` correctly passes `base_url` to handler methods
+
+### Technical Details
+- **Root Cause**: The OpenAI handler's `extract_usage_payload` method was trying to extract `base_url` from `kwargs.get("base_url")`, but the proxy passes it as a separate keyword argument
+- **Solution**: Updated method signature to `extract_usage_payload(self, obj: Any, attr: Any, base_url: Optional[str] = None, **kwargs)` 
+- **Backward Compatibility**: The fix maintains full backward compatibility - existing code continues to work unchanged
+- **Impact**: Non-OpenAI providers using OpenAI-compatible APIs (DeepSeek, Grok, Fireworks) now correctly include `base_url` in usage tracking payloads
+
 ## [0.2.5] - 2025-Jul-08
 
 0.2.3/0.2.4 bad releases.
@@ -164,6 +180,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apache 2.0 license
 - Built with modern Python packaging (pyproject.toml)
 
+[0.2.6]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.6
+[0.2.5]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.5
 [0.2.3]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.3
 [0.2.2]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.2
 [0.2.1]: https://github.com/llmcosts/llmcosts-python/releases/tag/v0.2.1

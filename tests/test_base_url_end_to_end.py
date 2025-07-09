@@ -70,6 +70,11 @@ class TestBaseUrlEndToEnd:
         json_part = usage_log_line.split("[LLM costs] OpenAI usage → ")[1]
         payload = json.loads(json_part)
 
+        # Print full payload (always print for debugging)
+        print("\n=== FULL USAGE PAYLOAD ===")
+        print(json.dumps(payload, indent=2))
+        print("=== END PAYLOAD ===\n")
+
         # Verify base_url is included in the payload
         assert "base_url" in payload, "base_url should be included in usage payload"
         assert payload["base_url"] == "https://api.deepseek.com/v1/", (
@@ -149,6 +154,11 @@ class TestBaseUrlEndToEnd:
         # Extract JSON from the log line
         json_part = usage_log_line.split("[LLM costs] OpenAI usage → ")[1]
         payload = json.loads(json_part)
+
+        # Print full payload (always print for debugging)
+        print("\n=== FULL USAGE PAYLOAD (EXPLICIT BASE_URL) ===")
+        print(json.dumps(payload, indent=2))
+        print("=== END PAYLOAD ===\n")
 
         # Verify explicit base_url is used, not the auto-extracted one
         assert "base_url" in payload, "base_url should be included in usage payload"

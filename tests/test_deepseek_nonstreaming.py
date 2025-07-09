@@ -4,6 +4,7 @@ Dedicated tests for DeepSeek non-streaming usage tracking and cost event integra
 Focus: Non-streaming DeepSeek API calls using OpenAI-compatible client.
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -79,6 +80,21 @@ class TestDeepSeekNonStreaming:
         # Verify base_url is included in the usage payload
         assert "https://api.deepseek.com/v1/" in caplog.text
 
+        # Print full payload (always print for debugging)
+        log_lines = caplog.text.split("\n")
+        usage_log_line = None
+        for line in log_lines:
+            if "[LLM costs] OpenAI usage →" in line:
+                usage_log_line = line
+                break
+
+        if usage_log_line:
+            json_part = usage_log_line.split("[LLM costs] OpenAI usage → ")[1]
+            payload = json.loads(json_part)
+            print("\n=== FULL DEEPSEEK USAGE PAYLOAD ===")
+            print(json.dumps(payload, indent=2))
+            print("=== END PAYLOAD ===\n")
+
     def test_deepseek_coder_model(self, tracked_deepseek_client, caplog):
         """Test DeepSeek Coder model for code generation."""
         response = tracked_deepseek_client.chat.completions.create(
@@ -100,6 +116,21 @@ class TestDeepSeekNonStreaming:
 
         # Verify base_url is included in the usage payload
         assert "https://api.deepseek.com/v1/" in caplog.text
+
+        # Print full payload (always print for debugging)
+        log_lines = caplog.text.split("\n")
+        usage_log_line = None
+        for line in log_lines:
+            if "[LLM costs] OpenAI usage →" in line:
+                usage_log_line = line
+                break
+
+        if usage_log_line:
+            json_part = usage_log_line.split("[LLM costs] OpenAI usage → ")[1]
+            payload = json.loads(json_part)
+            print("\n=== FULL DEEPSEEK CODER PAYLOAD ===")
+            print(json.dumps(payload, indent=2))
+            print("=== END PAYLOAD ===\n")
 
 
 if __name__ == "__main__":

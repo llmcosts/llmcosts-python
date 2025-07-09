@@ -4,6 +4,7 @@ Dedicated tests for Grok non-streaming usage tracking and cost event integration
 Focus: Non-streaming Grok API calls using OpenAI-compatible client.
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -75,6 +76,21 @@ class TestGrokNonStreaming:
         assert "prompt_tokens" in caplog.text
         assert "total_tokens" in caplog.text
 
+        # Print full payload (always print for debugging)
+        log_lines = caplog.text.split("\n")
+        usage_log_line = None
+        for line in log_lines:
+            if "[LLM costs] OpenAI usage →" in line:
+                usage_log_line = line
+                break
+
+        if usage_log_line:
+            json_part = usage_log_line.split("[LLM costs] OpenAI usage → ")[1]
+            payload = json.loads(json_part)
+            print("\n=== FULL GROK USAGE PAYLOAD ===")
+            print(json.dumps(payload, indent=2))
+            print("=== END PAYLOAD ===\n")
+
     def test_grok_conversation(self, tracked_grok_client, caplog):
         """Test Grok conversational capabilities."""
         try:
@@ -101,6 +117,21 @@ class TestGrokNonStreaming:
         assert "model" in caplog.text
         assert "response_id" in caplog.text
         assert "timestamp" in caplog.text
+
+        # Print full payload (always print for debugging)
+        log_lines = caplog.text.split("\n")
+        usage_log_line = None
+        for line in log_lines:
+            if "[LLM costs] OpenAI usage →" in line:
+                usage_log_line = line
+                break
+
+        if usage_log_line:
+            json_part = usage_log_line.split("[LLM costs] OpenAI usage → ")[1]
+            payload = json.loads(json_part)
+            print("\n=== FULL GROK CONVERSATION PAYLOAD ===")
+            print(json.dumps(payload, indent=2))
+            print("=== END PAYLOAD ===\n")
 
     def test_grok_payload_structure(self, tracked_grok_client, caplog):
         """Test that Grok usage payloads have the expected structure."""
@@ -133,6 +164,21 @@ class TestGrokNonStreaming:
         )
         assert response.usage.prompt_tokens > 0
         assert response.usage.total_tokens > 0
+
+        # Print full payload (always print for debugging)
+        log_lines = caplog.text.split("\n")
+        usage_log_line = None
+        for line in log_lines:
+            if "[LLM costs] OpenAI usage →" in line:
+                usage_log_line = line
+                break
+
+        if usage_log_line:
+            json_part = usage_log_line.split("[LLM costs] OpenAI usage → ")[1]
+            payload = json.loads(json_part)
+            print("\n=== FULL GROK STRUCTURE PAYLOAD ===")
+            print(json.dumps(payload, indent=2))
+            print("=== END PAYLOAD ===\n")
 
 
 if __name__ == "__main__":
